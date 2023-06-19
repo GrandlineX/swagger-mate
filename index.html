@@ -1,0 +1,181 @@
+<!DOCTYPE html><html class="default" lang="en"><head><meta charSet="utf-8"/><meta http-equiv="x-ua-compatible" content="IE=edge"/><title>@grandlinex/swagger-mate</title><meta name="description" content="Documentation for @grandlinex/swagger-mate"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="assets/style.css"/><link rel="stylesheet" href="assets/highlight.css"/><script defer src="assets/main.js"></script><script async src="assets/search.js" id="tsd-search-script"></script></head><body><script>document.documentElement.dataset.theme = localStorage.getItem("tsd-theme") || "os"</script><header class="tsd-page-toolbar">
+<div class="tsd-toolbar-contents container">
+<div class="table-cell" id="tsd-search" data-base=".">
+<div class="field"><label for="tsd-search-field" class="tsd-widget tsd-toolbar-icon search no-caption"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M15.7824 13.833L12.6666 10.7177C12.5259 10.5771 12.3353 10.499 12.1353 10.499H11.6259C12.4884 9.39596 13.001 8.00859 13.001 6.49937C13.001 2.90909 10.0914 0 6.50048 0C2.90959 0 0 2.90909 0 6.49937C0 10.0896 2.90959 12.9987 6.50048 12.9987C8.00996 12.9987 9.39756 12.4863 10.5008 11.6239V12.1332C10.5008 12.3332 10.5789 12.5238 10.7195 12.6644L13.8354 15.7797C14.1292 16.0734 14.6042 16.0734 14.8948 15.7797L15.7793 14.8954C16.0731 14.6017 16.0731 14.1267 15.7824 13.833ZM6.50048 10.499C4.29094 10.499 2.50018 8.71165 2.50018 6.49937C2.50018 4.29021 4.28781 2.49976 6.50048 2.49976C8.71001 2.49976 10.5008 4.28708 10.5008 6.49937C10.5008 8.70852 8.71314 10.499 6.50048 10.499Z" fill="var(--color-text)"></path></svg></label><input type="text" id="tsd-search-field" aria-label="Search"/></div>
+<div class="field">
+<div id="tsd-toolbar-links"></div></div>
+<ul class="results">
+<li class="state loading">Preparing search index...</li>
+<li class="state failure">The search index is not available</li></ul><a href="index.html" class="title">@grandlinex/swagger-mate</a></div>
+<div class="table-cell" id="tsd-widgets"><a href="#" class="tsd-widget tsd-toolbar-icon menu no-caption" data-toggle="menu" aria-label="Menu"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="1" y="3" width="14" height="2" fill="var(--color-text)"></rect><rect x="1" y="7" width="14" height="2" fill="var(--color-text)"></rect><rect x="1" y="11" width="14" height="2" fill="var(--color-text)"></rect></svg></a></div></div></header>
+<div class="container container-main">
+<div class="col-content">
+<div class="tsd-page-title">
+<h2>@grandlinex/swagger-mate</h2></div>
+<div class="tsd-panel tsd-typography"><a id="md:swagger-mate" class="tsd-anchor"></a><h1><a href="#md:swagger-mate">Swagger-Mate</a></h1><blockquote>
+<p>GrandLineX Swagger-Mate  project</p>
+</blockquote>
+<p><a href="https://github.com/GrandlineX/swagger-mate"><img src="https://badge.fury.io/gh/grandlinex%2Fswagger-mate.svg" alt="GitHub"></a>
+<a href="https://www.npmjs.com/package/@grandlinex/swagger-mate"><img src="https://img.shields.io/static/v1?label=NPM&message=Package&color=red&logo=NPM" alt="NPM"></a>
+<img src="https://img.shields.io/static/v1?label=Language&message=TypeScript&color=blue&logo=TypeScript" alt="TS"></p>
+<a id="md:status" class="tsd-anchor"></a><h3><a href="#md:status">Status</a></h3><p><img src="https://sonarcloud.io/api/project_badges/measure?project=GrandlineX_swagger-mate&metric=alert_status" alt="Quality Gate Status">
+<img src="https://sonarcloud.io/api/project_badges/measure?project=GrandlineX_swagger-mate&metric=security_rating" alt="Security Rating">
+<img src="https://sonarcloud.io/api/project_badges/measure?project=GrandlineX_swagger-mate&metric=sqale_rating" alt="Maintainability Rating">
+<img src="https://sonarcloud.io/api/project_badges/measure?project=GrandlineX_swagger-mate&metric=reliability_rating" alt="Reliability Rating">
+<img src="https://sonarcloud.io/api/project_badges/measure?project=GrandlineX_swagger-mate&metric=coverage" alt="Coverage"></p>
+<a id="md:issues" class="tsd-anchor"></a><h3><a href="#md:issues">Issues</a></h3><p><img src="https://sonarcloud.io/api/project_badges/measure?project=GrandlineX_swagger-mate&metric=bugs" alt="Bugs">
+<img src="https://sonarcloud.io/api/project_badges/measure?project=GrandlineX_swagger-mate&metric=vulnerabilities" alt="Vulnerabilities">
+<img src="https://sonarcloud.io/api/project_badges/measure?project=GrandlineX_swagger-mate&metric=code_smells" alt="Code Smells"></p>
+<a id="md:features" class="tsd-anchor"></a><h2><a href="#md:features">Features</a></h2><ul>
+<li>Generate swagger.{json|yml} from code</li>
+<li>Generate Api client from swagger.{json|yml}</li>
+</ul>
+<a id="md:quick-start" class="tsd-anchor"></a><h2><a href="#md:quick-start">Quick Start</a></h2><a id="md:install" class="tsd-anchor"></a><h3><a href="#md:install">Install</a></h3><ol>
+<li>Insatal npm package</li>
+</ol>
+<pre><code class="language-shell"><span class="hl-0">  </span><span class="hl-1">npm</span><span class="hl-0"> </span><span class="hl-2">i</span><span class="hl-0">  </span><span class="hl-2">@grandlinex/swagger-mate</span>
+</code><button>Copy</button></pre>
+<ol start="2">
+<li>Update package.json</li>
+</ol>
+<pre><code class="language-json"><span class="hl-0">{</span><br/><span class="hl-0">  </span><span class="hl-3">//...</span><br/><span class="hl-0">  </span><span class="hl-4">&quot;scripts&quot;</span><span class="hl-0">: {</span><br/><span class="hl-0">    </span><span class="hl-4">&quot;makeSpec&quot;</span><span class="hl-0">: </span><span class="hl-2">&quot;swagger-mate&quot;</span><span class="hl-0">,</span><br/><span class="hl-0">    </span><span class="hl-4">&quot;serveSpec&quot;</span><span class="hl-0">: </span><span class="hl-2">&quot;swagger-mate --serve&quot;</span><span class="hl-0">,</span><br/><span class="hl-0">    </span><span class="hl-4">&quot;buildSpecMain&quot;</span><span class="hl-0">: </span><span class="hl-2">&quot;swagger-mate --build --main&quot;</span><span class="hl-0">,</span><br/><span class="hl-0">    </span><span class="hl-4">&quot;buildSpecDev&quot;</span><span class="hl-0">: </span><span class="hl-2">&quot;swagger-mate --build --dev&quot;</span><br/><span class="hl-0">  },</span><br/><span class="hl-0">  </span><span class="hl-4">&quot;glx&quot;</span><span class="hl-0">: {</span><br/><span class="hl-0">    </span><span class="hl-4">&quot;kernel&quot;</span><span class="hl-0">: </span><span class="hl-2">&quot;dist/Kernel.js&quot;</span><br/><span class="hl-0">  }</span><br/><span class="hl-0">  </span><span class="hl-3">//...</span><br/><span class="hl-0">}</span>
+</code><button>Copy</button></pre>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>npm run makeSpec</code></td>
+<td>make <code>openapi.json</code></td>
+</tr>
+<tr>
+<td><code>npm run serveSpec</code></td>
+<td>serve <code>openapi.json</code> with <a href="https://github.com/swagger-api/swagger-ui">swagger-ui</a></td>
+</tr>
+<tr>
+<td><code>npm run buildSpecMain</code></td>
+<td>build api client (prod)</td>
+</tr>
+<tr>
+<td><code>npm run buildSpecDev</code></td>
+<td>build api client (dev)</td>
+</tr>
+</tbody></table>
+<a id="md:serve-option" class="tsd-anchor"></a><h3><a href="#md:serve-option">Serve option</a></h3><blockquote>
+<p>Default port = 9000</p>
+</blockquote>
+<p>ENV variables</p>
+<table>
+<thead>
+<tr>
+<th>ENV</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>SW_PORT</td>
+<td>set custom serve port</td>
+</tr>
+<tr>
+<td>SW_AUTH</td>
+<td>set default bearer token</td>
+</tr>
+</tbody></table>
+<a id="md:define-types" class="tsd-anchor"></a><h2><a href="#md:define-types">Define types</a></h2><a id="md:kernel" class="tsd-anchor"></a><h3><a href="#md:kernel">Kernel</a></h3><pre><code class="language-typescript"><span class="hl-5">import</span><span class="hl-0"> { </span><span class="hl-6">SPathUtil</span><span class="hl-0">, </span><span class="hl-6">Swagger</span><span class="hl-0"> } </span><span class="hl-5">from</span><span class="hl-0"> </span><span class="hl-2">&#39;@grandlinex/swagger-mate&#39;</span><span class="hl-0">;</span><br/><span class="hl-3">// OpenApi 3.0.3 - Root Api definition</span><br/><span class="hl-0">@</span><span class="hl-1">Swagger</span><span class="hl-0">({</span><br/><span class="hl-0">  </span><span class="hl-6">info:</span><span class="hl-0"> {</span><br/><span class="hl-0">    </span><span class="hl-6">title:</span><span class="hl-0"> </span><span class="hl-2">&#39;KernelTest&#39;</span><span class="hl-0">,</span><br/><span class="hl-0">    </span><span class="hl-6">version:</span><span class="hl-0"> </span><span class="hl-2">&#39;0.1.0&#39;</span><span class="hl-0">, </span><span class="hl-3">// Version (optional) will be read from package.json</span><br/><span class="hl-0">  },</span><br/><span class="hl-0">  </span><span class="hl-6">openapi:</span><span class="hl-0"> </span><span class="hl-2">&#39;3.0.3&#39;</span><span class="hl-0">,</span><br/><span class="hl-0">  </span><span class="hl-6">servers:</span><span class="hl-0"> [</span><br/><span class="hl-0">    {</span><br/><span class="hl-0">      </span><span class="hl-6">url:</span><span class="hl-0"> </span><span class="hl-2">&#39;http://localhost:9257&#39;</span><span class="hl-0">,</span><br/><span class="hl-0">      </span><span class="hl-6">description:</span><span class="hl-0"> </span><span class="hl-2">&#39;LocalDev&#39;</span><span class="hl-0">,</span><br/><span class="hl-0">    },</span><br/><span class="hl-0">  ],</span><br/><span class="hl-0">  </span><span class="hl-6">paths:</span><span class="hl-0"> {</span><br/><span class="hl-0">      </span><span class="hl-3">// Static definition</span><br/><span class="hl-0">    </span><span class="hl-2">&#39;/version&#39;</span><span class="hl-6">:</span><span class="hl-0"> {</span><br/><span class="hl-0">      </span><span class="hl-6">get:</span><span class="hl-0"> {</span><br/><span class="hl-0">        </span><span class="hl-6">description:</span><span class="hl-0"> </span><span class="hl-2">&#39;Get version&#39;</span><span class="hl-0">,</span><br/><span class="hl-0">        </span><span class="hl-6">operationId:</span><span class="hl-0"> </span><span class="hl-2">&#39;getVersion&#39;</span><span class="hl-0">,</span><br/><span class="hl-0">        </span><span class="hl-6">responses:</span><span class="hl-0"> </span><span class="hl-6">SPathUtil</span><span class="hl-0">.</span><span class="hl-1">defaultResponse</span><span class="hl-0">(</span><span class="hl-2">&#39;200&#39;</span><span class="hl-0">, </span><span class="hl-2">&#39;500&#39;</span><span class="hl-0">),</span><br/><span class="hl-0">      },</span><br/><span class="hl-0">    },</span><br/><span class="hl-0">   </span><span class="hl-3">// Dynamic definition will be read from @SPath</span><br/><span class="hl-0">  },</span><br/><span class="hl-0">  </span><span class="hl-6">security:</span><span class="hl-0"> [</span><br/><span class="hl-0">    {</span><br/><span class="hl-0">      </span><span class="hl-6">bearerAuth:</span><span class="hl-0"> [],</span><br/><span class="hl-0">    },</span><br/><span class="hl-0">  ],</span><br/><span class="hl-0">  </span><span class="hl-6">components:</span><span class="hl-0"> {</span><br/><span class="hl-0">    </span><span class="hl-6">securitySchemes:</span><span class="hl-0"> {</span><br/><span class="hl-0">      </span><span class="hl-6">bearerAuth:</span><span class="hl-0"> {</span><br/><span class="hl-0">        </span><span class="hl-6">type:</span><span class="hl-0"> </span><span class="hl-2">&#39;http&#39;</span><span class="hl-0">,</span><br/><span class="hl-0">        </span><span class="hl-6">scheme:</span><span class="hl-0"> </span><span class="hl-2">&#39;bearer&#39;</span><span class="hl-0">,</span><br/><span class="hl-0">        </span><span class="hl-6">bearerFormat:</span><span class="hl-0"> </span><span class="hl-2">&#39;JWT&#39;</span><span class="hl-0">,</span><br/><span class="hl-0">      },</span><br/><span class="hl-0">    },</span><br/><span class="hl-0">  },</span><br/><span class="hl-0">})</span><br/><span class="hl-5">export</span><span class="hl-0"> </span><span class="hl-5">default</span><span class="hl-0"> </span><span class="hl-7">class</span><span class="hl-0"> </span><span class="hl-8">SomeKernel</span><span class="hl-0"> {}</span><br/>
+</code><button>Copy</button></pre>
+<a id="md:action" class="tsd-anchor"></a><h3><a href="#md:action">Action</a></h3><pre><code class="language-typescript"><span class="hl-5">import</span><span class="hl-0"> { </span><span class="hl-6">SPathUtil</span><span class="hl-0">, </span><span class="hl-6">Swagger</span><span class="hl-0"> } </span><span class="hl-5">from</span><span class="hl-0"> </span><span class="hl-2">&#39;@grandlinex/swagger-mate&#39;</span><span class="hl-0">;</span><br/><br/><span class="hl-3">// OpenApi 3.0.3 - Patch definition</span><br/><span class="hl-0">@</span><span class="hl-1">SPath</span><span class="hl-0">({</span><br/><span class="hl-0">    </span><span class="hl-2">&#39;/test&#39;</span><span class="hl-6">:</span><span class="hl-0"> {</span><br/><span class="hl-0">        </span><span class="hl-6">get:</span><span class="hl-0"> {</span><br/><span class="hl-0">            </span><span class="hl-6">description:</span><span class="hl-0"> </span><span class="hl-2">&#39;test&#39;</span><span class="hl-0">,</span><br/><span class="hl-0">            </span><span class="hl-6">operationId:</span><span class="hl-0"> </span><span class="hl-2">&#39;getTest&#39;</span><span class="hl-0">, </span><span class="hl-3">// name for the js api client</span><br/><span class="hl-0">            </span><span class="hl-6">summary:</span><span class="hl-0"> </span><span class="hl-2">&#39;Descritption summary&#39;</span><span class="hl-0">,</span><br/><span class="hl-0">            </span><span class="hl-6">responses:</span><span class="hl-0"> </span><span class="hl-6">SPathUtil</span><span class="hl-0">.</span><span class="hl-1">defaultResponse</span><span class="hl-0">(</span><span class="hl-2">&#39;200&#39;</span><span class="hl-0">,</span><span class="hl-2">&#39;400&#39;</span><span class="hl-0">, </span><span class="hl-2">&#39;500&#39;</span><span class="hl-0">)</span><br/><span class="hl-0">        },</span><br/><span class="hl-0">    },</span><br/><span class="hl-0">})</span><br/><span class="hl-5">export</span><span class="hl-0"> </span><span class="hl-5">default</span><span class="hl-0"> </span><span class="hl-7">class</span><span class="hl-0"> </span><span class="hl-8">SomeBaseApiAction</span><span class="hl-0"> {}</span><br/>
+</code><button>Copy</button></pre>
+</div></div>
+<div class="col-sidebar">
+<div class="page-menu">
+<div class="tsd-navigation settings">
+<details class="tsd-index-accordion"><summary class="tsd-accordion-summary">
+<h3><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4.93896 8.531L12 15.591L19.061 8.531L16.939 6.409L12 11.349L7.06098 6.409L4.93896 8.531Z" fill="var(--color-text)" id="icon-chevronDown"></path></svg>Settings</h3></summary>
+<div class="tsd-accordion-details">
+<div class="tsd-filter-visibility">
+<h4 class="uppercase">Member Visibility</h4><form>
+<ul id="tsd-filter-options">
+<li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-protected" name="protected"/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Protected</span></label></li>
+<li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-private" name="private"/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Private</span></label></li>
+<li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-inherited" name="inherited" checked/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Inherited</span></label></li>
+<li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-external" name="external"/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>External</span></label></li></ul></form></div>
+<div class="tsd-theme-toggle">
+<h4 class="uppercase">Theme</h4><select id="tsd-theme"><option value="os">OS</option><option value="light">Light</option><option value="dark">Dark</option></select></div></div></details></div>
+<details open class="tsd-index-accordion tsd-page-navigation"><summary class="tsd-accordion-summary">
+<h3><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><use href="#icon-chevronDown"></use></svg>On This Page</h3></summary>
+<div class="tsd-accordion-details">
+<ul>
+<li>
+<ul>
+<li><a href="#md:swagger-mate"><span>Swagger-<wbr/>Mate</span></a></li>
+<li>
+<ul>
+<li><a href="#md:status"><span>Status</span></a></li>
+<li>
+<ul>
+<li><a href="#md:issues"><span>Issues</span></a></li></ul></li>
+<li><a href="#md:features"><span>Features</span></a></li>
+<li><a href="#md:quick-start"><span>Quick <wbr/>Start</span></a></li>
+<li>
+<ul>
+<li><a href="#md:install"><span>Install</span></a></li>
+<li><a href="#md:serve-option"><span>Serve option</span></a></li></ul></li>
+<li><a href="#md:define-types"><span>Define types</span></a></li>
+<li>
+<ul>
+<li><a href="#md:kernel"><span>Kernel</span></a></li>
+<li><a href="#md:action"><span>Action</span></a></li></ul></li></ul></li></ul></li></ul></div></details></div>
+<div class="site-menu">
+<nav class="tsd-navigation"><a href="modules.html" class="current"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><g id="icon-4"><rect fill="var(--color-icon-background)" stroke="var(--color-ts-namespace)" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="6"></rect><path d="M9.33 16V7.24H10.77L13.446 14.74C13.43 14.54 13.41 14.296 13.386 14.008C13.37 13.712 13.354 13.404 13.338 13.084C13.33 12.756 13.326 12.448 13.326 12.16V7.24H14.37V16H12.93L10.266 8.5C10.282 8.692 10.298 8.936 10.314 9.232C10.33 9.52 10.342 9.828 10.35 10.156C10.366 10.476 10.374 10.784 10.374 11.08V16H9.33Z" fill="var(--color-text)"></path></g></svg><span>@grandlinex/swagger-<wbr/>mate</span></a>
+<ul class="tsd-small-nested-navigation">
+<li><a href="classes/BaseCon.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><g id="icon-128"><rect fill="var(--color-icon-background)" stroke="var(--color-ts-class)" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="6"></rect><path d="M11.898 16.1201C11.098 16.1201 10.466 15.8961 10.002 15.4481C9.53803 15.0001 9.30603 14.3841 9.30603 13.6001V9.64012C9.30603 8.85612 9.53803 8.24012 10.002 7.79212C10.466 7.34412 11.098 7.12012 11.898 7.12012C12.682 7.12012 13.306 7.34812 13.77 7.80412C14.234 8.25212 14.466 8.86412 14.466 9.64012H13.386C13.386 9.14412 13.254 8.76412 12.99 8.50012C12.734 8.22812 12.37 8.09212 11.898 8.09212C11.426 8.09212 11.054 8.22412 10.782 8.48812C10.518 8.75212 10.386 9.13212 10.386 9.62812V13.6001C10.386 14.0961 10.518 14.4801 10.782 14.7521C11.054 15.0161 11.426 15.1481 11.898 15.1481C12.37 15.1481 12.734 15.0161 12.99 14.7521C13.254 14.4801 13.386 14.0961 13.386 13.6001H14.466C14.466 14.3761 14.234 14.9921 13.77 15.4481C13.306 15.8961 12.682 16.1201 11.898 16.1201Z" fill="var(--color-text)"></path></g></svg><span>Base<wbr/>Con</span></a></li>
+<li><a href="classes/SPathUtil.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-128"></use></svg><span>SPath<wbr/>Util</span></a></li>
+<li><a href="classes/SwaggerClient.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-128"></use></svg><span>Swagger<wbr/>Client</span></a></li>
+<li><a href="classes/SwaggerUtil.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-128"></use></svg><span>Swagger<wbr/>Util</span></a></li>
+<li><a href="interfaces/ConHandle.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><g id="icon-256"><rect fill="var(--color-icon-background)" stroke="var(--color-ts-interface)" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="6"></rect><path d="M9.51 16V15.016H11.298V8.224H9.51V7.24H14.19V8.224H12.402V15.016H14.19V16H9.51Z" fill="var(--color-text)"></path></g></svg><span>Con<wbr/>Handle</span></a></li>
+<li><a href="interfaces/ConHandleConfig.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-256"></use></svg><span>Con<wbr/>Handle<wbr/>Config</span></a></li>
+<li><a href="interfaces/ConHandleResponse.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-256"></use></svg><span>Con<wbr/>Handle<wbr/>Response</span></a></li>
+<li><a href="interfaces/MergeInputType.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-256"></use></svg><span>Merge<wbr/>Input<wbr/>Type</span></a></li>
+<li><a href="interfaces/SKey.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-256"></use></svg><span>SKey</span></a></li>
+<li><a href="interfaces/SwaggerConfig.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-256"></use></svg><span>Swagger<wbr/>Config</span></a></li>
+<li><a href="interfaces/SwaggerConfigComponents.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-256"></use></svg><span>Swagger<wbr/>Config<wbr/>Components</span></a></li>
+<li><a href="interfaces/SwaggerRInfo.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-256"></use></svg><span>SwaggerRInfo</span></a></li>
+<li><a href="interfaces/SwaggerRInfoLicence.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-256"></use></svg><span>SwaggerRInfo<wbr/>Licence</span></a></li>
+<li><a href="interfaces/SwaggerRPathConf.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-256"></use></svg><span>SwaggerRPath<wbr/>Conf</span></a></li>
+<li><a href="interfaces/SwaggerRPathParameter.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-256"></use></svg><span>SwaggerRPath<wbr/>Parameter</span></a></li>
+<li><a href="interfaces/SwaggerRPathReqBody.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-256"></use></svg><span>SwaggerRPath<wbr/>Req<wbr/>Body</span></a></li>
+<li><a href="interfaces/SwaggerRPathTypes.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-256"></use></svg><span>SwaggerRPath<wbr/>Types</span></a></li>
+<li><a href="interfaces/SwaggerRServer.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-256"></use></svg><span>SwaggerRServer</span></a></li>
+<li><a href="types/ErrorType.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><g id="icon-4194304"><rect fill="var(--color-icon-background)" stroke="var(--color-ts-type-alias)" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="6"></rect><path d="M11.31 16V8.224H8.91V7.24H14.79V8.224H12.39V16H11.31Z" fill="var(--color-text)"></path></g></svg><span>Error<wbr/>Type</span></a></li>
+<li><a href="types/HandleRes.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4194304"></use></svg><span>Handle<wbr/>Res</span></a></li>
+<li><a href="types/HeaderType.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4194304"></use></svg><span>Header<wbr/>Type</span></a></li>
+<li><a href="types/HttpStatusTypes.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4194304"></use></svg><span>Http<wbr/>Status<wbr/>Types</span></a></li>
+<li><a href="types/PathParam.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4194304"></use></svg><span>Path<wbr/>Param</span></a></li>
+<li><a href="types/SDataFormat.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4194304"></use></svg><span>SData<wbr/>Format</span></a></li>
+<li><a href="types/SDataType.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4194304"></use></svg><span>SData<wbr/>Type</span></a></li>
+<li><a href="types/SMediaType.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4194304"></use></svg><span>SMedia<wbr/>Type</span></a></li>
+<li><a href="types/SSchemaEl.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4194304"></use></svg><span>SSchema<wbr/>El</span></a></li>
+<li><a href="types/SwaggerComSecuritySchemes.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4194304"></use></svg><span>Swagger<wbr/>Com<wbr/>Security<wbr/>Schemes</span></a></li>
+<li><a href="types/SwaggerCompResponse.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4194304"></use></svg><span>Swagger<wbr/>Comp<wbr/>Response</span></a></li>
+<li><a href="types/SwaggerContent.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4194304"></use></svg><span>Swagger<wbr/>Content</span></a></li>
+<li><a href="types/SwaggerPathInput.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4194304"></use></svg><span>Swagger<wbr/>Path<wbr/>Input</span></a></li>
+<li><a href="types/SwaggerRPath.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4194304"></use></svg><span>SwaggerRPath</span></a></li>
+<li><a href="types/SwaggerRPathConfResponse.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4194304"></use></svg><span>SwaggerRPath<wbr/>Conf<wbr/>Response</span></a></li>
+<li><a href="types/SwaggerRPathConfResponseDef.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4194304"></use></svg><span>SwaggerRPath<wbr/>Conf<wbr/>Response<wbr/>Def</span></a></li>
+<li><a href="types/SwaggerRRef.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4194304"></use></svg><span>SwaggerRRef</span></a></li>
+<li><a href="variables/FetchCon.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><g id="icon-32"><rect fill="var(--color-icon-background)" stroke="var(--color-ts-variable)" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="6"></rect><path d="M11.106 16L8.85 7.24H9.966L11.454 13.192C11.558 13.608 11.646 13.996 11.718 14.356C11.79 14.708 11.842 14.976 11.874 15.16C11.906 14.976 11.954 14.708 12.018 14.356C12.09 13.996 12.178 13.608 12.282 13.192L13.758 7.24H14.85L12.582 16H11.106Z" fill="var(--color-text)"></path></g></svg><span>Fetch<wbr/>Con</span></a></li>
+<li><a href="variables/NodeCon.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-32"></use></svg><span>Node<wbr/>Con</span></a></li>
+<li><a href="functions/SComponent.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><g id="icon-64"><rect fill="var(--color-icon-background)" stroke="var(--color-ts-function)" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="6"></rect><path d="M9.39 16V7.24H14.55V8.224H10.446V11.128H14.238V12.112H10.47V16H9.39Z" fill="var(--color-text)"></path></g></svg><span>SComponent</span></a></li>
+<li><a href="functions/SPath.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-64"></use></svg><span>SPath</span></a></li>
+<li><a href="functions/Swagger.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-64"></use></svg><span>Swagger</span></a></li>
+<li><a href="functions/getSComponent.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-64"></use></svg><span>getSComponent</span></a></li>
+<li><a href="functions/getSPath.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-64"></use></svg><span>getSPath</span></a></li>
+<li><a href="functions/getSwaggerMeta.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-64"></use></svg><span>get<wbr/>Swagger<wbr/>Meta</span></a></li>
+<li><a href="functions/isErrorType.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-64"></use></svg><span>is<wbr/>Error<wbr/>Type</span></a></li>
+<li><a href="functions/isSwaggerRef.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-64"></use></svg><span>is<wbr/>Swagger<wbr/>Ref</span></a></li></ul></nav></div></div></div>
+<div class="tsd-generator">
+<p>Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p></div>
+<div class="overlay"></div></body></html>
