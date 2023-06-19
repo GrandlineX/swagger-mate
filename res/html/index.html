@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>GrandLineX Swagger UI</title>
+    <link rel="stylesheet" type="text/css" href="swagger-ui.css">
+</head>
+<body>
+
+<div id="swagger-ui"></div>
+
+<script src="swagger-ui-standalone-preset.js"></script>
+<script src="swagger-ui-bundle.js"></script>
+
+<script>
+    window.onload = function() {
+        // Build a system
+        const urlParams = new URLSearchParams(window.location.search);
+        const url= "/spec"
+        const ui = SwaggerUIBundle({
+            url,
+            onComplete: () => {
+                const spl= window.location.search.substring(1).split("&")
+                const key = spl.find(function (x){
+                    return x.startsWith("auth=")
+                });
+                if (key){
+                    const [,dx] = key.split("=");
+                    ui.preauthorizeApiKey("bearerAuth", dx)
+                }
+            },
+            dom_id: '#swagger-ui',
+            deepLinking: true,
+            displayOperationId: true,
+            displayRequestDuration: true,
+            showExtensions: true,
+            requestSnippetsEnabled: true,
+            requestSnippets:{
+                generators: {
+                    curl_bash: {
+                        title: "cURL (bash)",
+                        syntax: "bash"
+                    },
+                    curl_powershell: {
+                        title: "cURL (PowerShell)",
+                        syntax: "powershell"
+                    },
+                    curl_cmd: {
+                        title: "cURL (CMD)",
+                        syntax: "bash"
+                    },
+                },
+                defaultExpanded: true
+            },
+            presets: [
+                SwaggerUIBundle.presets.apis,
+                SwaggerUIStandalonePreset
+            ],
+            plugins: [
+                SwaggerUIBundle.plugins.DownloadUrl
+            ],
+            layout: "StandaloneLayout",
+
+        })
+        window.ui = ui
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,18 @@
+ include:
+ - project: 'grandlinex/templates'
+   file: '/stages.yml'
+ - project: 'grandlinex/templates'
+   file: '/prod/core-bundle.yml'
+ - project: 'grandlinex/templates'
+   file: '/build/core-bundle.yml'
+ - project: 'grandlinex/templates'
+   file: '/update/update-glx.yml'
+ - project: 'grandlinex/templates'
+   file: '/deploy/npm-gitlab-deploy.yml'
+
+ make:build:prod:
+   artifacts:
+     paths:
+       - dist
+       - res/templates/class/*
+     expire_in: 7 days
