@@ -8,6 +8,8 @@
  - project: 'grandlinex/templates'
    file: '/update/update-glx.yml'
  - project: 'grandlinex/templates'
+   file: '/deploy/npm-deploy.yml'
+ - project: 'grandlinex/templates'
    file: '/deploy/npm-gitlab-deploy.yml'
 
  make:build:prod:
