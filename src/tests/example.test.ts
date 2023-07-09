@@ -49,7 +49,7 @@ describe('Client Gen', () => {
     expect(meta).not.toBeUndefined();
 
     if (meta) {
-      SwaggerClient.genAPICConnector(meta);
+      SwaggerClient.genAPICConnector({conf: meta, exclude:["NodeCon"], module:true});
     }
   });
 });

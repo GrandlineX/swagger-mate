@@ -1,6 +1,6 @@
 {
   "name": "@grandlinex/swagger-mate",
-  "version": "0.30.9",
+  "version": "0.31.0",
   "type": "module",
   "exports": {
     ".": {
@@ -31,14 +31,15 @@
     "lint": "eslint src",
     "test": "npm run pre-build && cross-env dev=true jest --runInBand ",
     "test-coverage": "npm run pre-build && cross-env dev=true jest --runInBand --ci --collectCoverage   --coverageDirectory=\"./coverage\"  --reporters=default --reporters=jest-junit",
-    "makeDocs": "typedoc"
+    "makeDocs": "typedoc",
+    "debug": "ts-node ./src/ArgReader.ts -i --debug -abc -d 5"
   },
   "bin": {
     "swagger-mate": "./dist/cjs/cli.js",
     "swagger-mate-esm": "./dist/mjs/cli.js"
   },
   "dependencies": {
-    "@grandlinex/core": "0.30.1",
+    "@grandlinex/core": "0.31.0",
     "express": "4.18.2",
     "form-data": "^4.0.0",
     "js-yaml": "4.1.0",

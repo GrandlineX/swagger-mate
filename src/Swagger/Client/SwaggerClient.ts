@@ -164,11 +164,41 @@ function interfaceHandler(conf: SwaggerConfig): string {
   return interfaceList.join('\n');
 }
 
-function buildCon(conf: SwaggerConfig) {
+type Excludes = ('NodeCon' | 'FetchCon' | 'AxiosCon')[];
+
+function indexHelper(template: string, exclude?: Excludes) {
+  const exportList: string[] = [
+    'ApiCon',
+    'BaseCon',
+    'CApiCon',
+    'IApiCon',
+    'FormData',
+  ];
+  const lines = [...template.split('\n')];
+  if (!exclude || !exclude.includes('NodeCon')) {
+    lines.push(`import NodeCon from './NodeCon.js';`);
+    exportList.push('NodeCon');
+  }
+  if (!exclude || !exclude.includes('FetchCon')) {
+    lines.push(`import FetchCon from './FetchCon.js';`);
+    exportList.push('FetchCon');
+  }
+  if (!exclude || !exclude.includes('AxiosCon')) {
+    lines.push(`import AxiosCon from './AxiosCon.js';`);
+    exportList.push('AxiosCon');
+  }
+  lines.push(`export { ${exportList.join(', ')} };`);
+  return lines.join('\n');
+}
+function buildCon(conf: SwaggerConfig, exclude?: Excludes) {
   const template = PathHelp(getBaseFolder(), '..', 'res', 'templates');
 
   const funcTemo = fs.readFileSync(
     Path.join(template, 'class', 'ApiCon.ts'),
+    'utf-8'
+  );
+  const indexTemp = fs.readFileSync(
+    Path.join(template, 'class', 'index.ts'),
     'utf-8'
   );
   const ifTemp = fs.readFileSync(
@@ -181,6 +211,10 @@ function buildCon(conf: SwaggerConfig) {
     'utf-8'
   );
 
+  fs.writeFileSync(
+    Path.join(baseGen, 'index.ts'),
+    indexHelper(indexTemp, exclude)
+  );
   fs.writeFileSync(Path.join(baseGen, 'ApiTypes.ts'), interfaceHandler(conf));
   const [con, iCon, cCon] = insertHandler(conf, [funcTemo, ifTemp, cTemp]);
   fs.writeFileSync(Path.join(baseGen, 'ApiCon.ts'), con);
@@ -188,19 +222,21 @@ function buildCon(conf: SwaggerConfig) {
   fs.writeFileSync(Path.join(baseGen, 'CApiCon.ts'), cCon);
 }
 
-function createPackage(name?: string, version?: string) {
-  const conf = {
+function createPackage(name?: string, version?: string, module?: boolean) {
+  const conf: Record<string, any> = {
     name: name || '@swagger/con',
     version: version || '0.0.1',
     main: 'dist/index.js',
     types: 'dist/index.d.ts',
+    module: module ? 'dist/index.js' : undefined,
+    type: module ? 'module' : undefined,
     dependencies: {
       'form-data': '4.0.0',
       axios: '1.1.3',
     },
     devDependencies: {
-      '@types/node': '^16.11.14',
-      typescript: '^4.6.3',
+      '@types/node': '^20.3.0',
+      typescript: '^5.1.3',
     },
     scripts: {
       build: 'tsc',
@@ -216,14 +252,14 @@ function createPackage(name?: string, version?: string) {
       jsx: 'react',
       baseUrl: './src',
       declaration: true,
-      target: 'es6',
-      module: 'commonjs',
+      target: 'ES2020',
+      module: module ? 'NodeNext' : 'commonjs',
       outDir: './dist',
       strict: true,
       esModuleInterop: true,
       experimentalDecorators: true,
       emitDecoratorMetadata: true,
-
+      moduleResolution: module ? 'NodeNext' : undefined,
       skipLibCheck: true,
       forceConsistentCasingInFileNames: true,
     },
@@ -238,24 +274,34 @@ function createPackage(name?: string, version?: string) {
 }
 
 export default class SwaggerClient {
-  static genAPICConnector(
-    conf: SwaggerConfig,
-    name?: string,
-    version?: string,
-    writeMeta = true
-  ) {
+  static genAPICConnector(options: {
+    conf: SwaggerConfig;
+    name?: string;
+    version?: string;
+    writeMeta?: boolean;
+    module?: boolean;
+    exclude?: Excludes;
+  }) {
+    const { name, version, writeMeta, module, exclude, conf } = options;
     const template = PathHelp(getBaseFolder(), '..', 'res', 'templates');
 
     XUtil.createFolderBulk(baseR, baseGen);
 
     cp(Path.join(template, 'class'), 'BaseCon.ts');
-    cp(Path.join(template, 'class'), 'FetchCon.ts');
-    cp(Path.join(template, 'class'), 'NodeCon.ts');
-    cp(Path.join(template, 'class'), 'AxiosCon.ts');
+    if (!exclude || !exclude.includes('FetchCon')) {
+      cp(Path.join(template, 'class'), 'FetchCon.ts');
+    }
+    if (!exclude || !exclude.includes('NodeCon')) {
+      cp(Path.join(template, 'class'), 'NodeCon.ts');
+    }
+    if (!exclude || !exclude.includes('AxiosCon')) {
+      cp(Path.join(template, 'class'), 'AxiosCon.ts');
+    }
+
     cp(Path.join(template, 'class'), 'index.ts');
-    buildCon(conf);
-    createPackage(name, version);
-    if (writeMeta) {
+    buildCon(conf, exclude);
+    createPackage(name, version, module);
+    if (writeMeta || writeMeta === undefined) {
       SwaggerUtil.writeMeta(conf, 'JSON', baseR);
     }
   }

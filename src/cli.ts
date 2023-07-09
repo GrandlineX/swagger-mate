@@ -35,8 +35,8 @@ async function run() {
     throw new Error('No Kernel defined in package.json [glx.kernel]');
   }
   console.log(`Importing Kernel @ ${kPath}`);
-  const [param01, param02] = arg.slice(2);
-  console.log(`Args: ${param01} ${param02}`);
+  const [param01] = arg.slice(2);
+  console.log(`Args: ${param01}`);
   const kernel = await importKernel(kPath);
 
   const conf = SwaggerUtil.metaExtractor(
@@ -57,14 +57,18 @@ async function run() {
       console.log('Building Swagger Meta');
       switch (arg[arg.length - 1]) {
         case '--main':
-          SwaggerClient.genAPICConnector(conf, `${pkg.name}-con`, pkg.version);
+          SwaggerClient.genAPICConnector({
+            conf,
+            name: `${pkg.name}-con`,
+            version: pkg.version,
+          });
           break;
         case '--dev':
-          SwaggerClient.genAPICConnector(
+          SwaggerClient.genAPICConnector({
             conf,
-            `${pkg.name}-con`,
-            `${pkg.version}-alpha.${ppid || '0'}`
-          );
+            name: `${pkg.name}-con`,
+            version: `${pkg.version}-alpha.${ppid || '0'}`,
+          });
           break;
         default:
           break;
