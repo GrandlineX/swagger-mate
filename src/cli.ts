@@ -42,7 +42,7 @@ async function run() {
   const conf = SwaggerUtil.metaExtractor(
     kernel,
     true,
-    ...kernel.getActionList()
+    ...kernel.getActionList(true)
   );
   if (conf) {
     SwaggerUtil.writeMeta(conf, 'JSON');
