@@ -5,7 +5,7 @@ import { FunctionTemplateProps, reqBody } from './FunctionTemplate.js';
 function functionProps(
   route: string,
   t: 'get' | 'post' | 'patch' | 'delete' | 'update',
-  cur: SwaggerRPathConf
+  cur: SwaggerRPathConf,
 ): FunctionTemplateProps {
   const comments: string[] = [];
 
@@ -68,7 +68,7 @@ function functionProps(
       !!cur.requestBody,
       type,
       bodyType,
-      queryKey
+      queryKey,
     ),
     FC_GEN: '',
     FC_RETURN: `: Promise<HandleRes<${type}>> `,

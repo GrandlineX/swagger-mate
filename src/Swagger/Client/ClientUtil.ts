@@ -89,7 +89,7 @@ export function typeByRef(ref: string, use?: boolean): string {
 export function transformInterface(
   operation: string,
   tag: IFTag | string,
-  schema: SSchemaEl
+  schema: SSchemaEl,
 ): IfMappingType[] {
   const out: IfMappingType[] = [];
   const cur: IfMappingType = {
@@ -182,6 +182,28 @@ export function transformInterface(
           }
         }
         break;
+      case 'string':
+        out.push({
+          keys: [],
+          name: cur.name,
+          rawType: `string`,
+        });
+        break;
+      case 'integer':
+      case 'number':
+        out.push({
+          keys: [],
+          name: cur.name,
+          rawType: `number`,
+        });
+        break;
+      case 'boolean':
+        out.push({
+          keys: [],
+          name: cur.name,
+          rawType: `boolean`,
+        });
+        break;
       default:
         break;
     }
@@ -202,14 +224,14 @@ export function transformInterface(
 export function transformFormInterface(
   operation: string,
   tag: IFTag | string,
-  schema: SSchemaEl
+  // schema: SSchemaEl,
 ): IfMappingType[] {
   const out: IfMappingType[] = [];
   const cur: IfMappingType = {
     name: ifName(operation, tag),
     keys: [],
   };
-  const keys: null | string[] = null;
+  // const keys: null | string[] = null;
 
   cur.rawType = `FormData`;
   out.push(cur);

@@ -23,40 +23,40 @@ function docTemplate(inp: string, doc?: string[]) {
 
 function functionTemplate(
   FC_NAME: string,
-  props: Partial<FunctionTemplateProps>
+  props: Partial<FunctionTemplateProps>,
 ) {
   const { FC_PROPS, FC_BODY, FC_RETURN, FC_GEN, FC_ASYNC } = props;
   return docTemplate(
     `${S(2)}${eS(FC_ASYNC)}${eS(FC_NAME)}${eS(FC_GEN)}(${eS(FC_PROPS)})${eS(
-      FC_RETURN
+      FC_RETURN,
     )}{
 ${S(4)}${eS(FC_BODY)}
 ${S(2)}}`,
-    props.FC_DOC
+    props.FC_DOC,
   );
 }
 
 function functionInterfaceTemplate(
   FC_NAME: string,
-  props: Partial<FunctionTemplateProps>
+  props: Partial<FunctionTemplateProps>,
 ) {
   const { FC_PROPS, FC_RETURN, FC_GEN, FC_DOC } = props;
   return docTemplate(
     `${S(2)}${eS(FC_NAME)}${eS(FC_GEN)}(${eS(FC_PROPS)})${eS(FC_RETURN)}`,
-    FC_DOC
+    FC_DOC,
   );
 }
 
 function abstractInterfaceTemplate(
   FC_NAME: string,
-  props: Partial<FunctionTemplateProps>
+  props: Partial<FunctionTemplateProps>,
 ) {
   const { FC_PROPS, FC_RETURN, FC_GEN, FC_DOC } = props;
   return docTemplate(
     `${S(2)}abstract ${eS(FC_NAME)}${eS(FC_GEN)}(${eS(FC_PROPS)})${eS(
-      FC_RETURN
+      FC_RETURN,
     )};`,
-    FC_DOC
+    FC_DOC,
   );
 }
 
@@ -67,7 +67,7 @@ function reqBody(
   hasBody: boolean,
   type: string,
   bodyType: string,
-  queryKey: string[]
+  queryKey: string[],
 ): string {
   let q = 'undefined';
   if (queryKey.length > 0 || paramKey.length > 0) {

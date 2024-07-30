@@ -1,5 +1,5 @@
 // eslint-disable-next-line max-classes-per-file
-import { Entity01 } from './Entity';
+import { Entity01 } from './Entity.js';
 import { SPath, SPathUtil, SComponent } from '../../index.js';
 
 @SPath({
@@ -103,3 +103,23 @@ export class ActonTwo {}
   },
 })
 export class ActonThree {}
+
+@SPath({
+  '/api/test': {
+    delete: {
+      operationId: 'deleteFile',
+      description: 'delete file',
+      summary: 'Descritption summary',
+      responses: SPathUtil.jsonResponse(
+        '200',
+        {
+          type: 'string'
+        },
+        false,
+        '400',
+        '500'
+      ),
+    },
+  },
+})
+export class ActonFour {}

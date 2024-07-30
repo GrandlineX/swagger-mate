@@ -39,7 +39,7 @@ function cp(path: string, file: string) {
 
 function insertHandler(
   conf: SwaggerConfig,
-  temp: [string, string, string]
+  temp: [string, string, string],
 ): [string, string, string] {
   const functionList: string[] = [];
   const functionInterfaceList: string[] = [];
@@ -54,19 +54,19 @@ function insertHandler(
       const cur = r[t];
       if (cur && cur.operationId) {
         functionList.push(
-          functionTemplate(cur.operationId, functionProps(route, t, cur))
+          functionTemplate(cur.operationId, functionProps(route, t, cur)),
         );
         functionInterfaceList.push(
           functionInterfaceTemplate(
             cur.operationId,
-            functionProps(route, t, cur)
-          )
+            functionProps(route, t, cur),
+          ),
         );
         abstractInterfaceList.push(
           abstractInterfaceTemplate(
             cur.operationId,
-            functionProps(route, t, cur)
-          )
+            functionProps(route, t, cur),
+          ),
         );
       } else {
         console.warn(`Missing operationId #${t} @${route}`);
@@ -97,8 +97,8 @@ function interfaceHandler(conf: SwaggerConfig): string {
             ...transformInterface(
               cur.operationId,
               IFTag.RequestBody,
-              cur.requestBody.content['application/json'].schema
-            ).map((val) => interfaceTemplate(val.name, val.keys, val.rawType))
+              cur.requestBody.content['application/json'].schema,
+            ).map((val) => interfaceTemplate(val.name, val.keys, val.rawType)),
           );
         }
         if (cur.requestBody?.content?.['multipart/form-data']) {
@@ -106,8 +106,8 @@ function interfaceHandler(conf: SwaggerConfig): string {
             ...transformFormInterface(
               cur.operationId,
               IFTag.RequestBody,
-              cur.requestBody.content['multipart/form-data'].schema
-            ).map((val) => interfaceTemplate(val.name, val.keys, val.rawType))
+              //    cur.requestBody.content['multipart/form-data'].schema,
+            ).map((val) => interfaceTemplate(val.name, val.keys, val.rawType)),
           );
         }
         const active = cur.responses?.['200'] || cur.responses?.['201'];
@@ -120,8 +120,8 @@ function interfaceHandler(conf: SwaggerConfig): string {
             ...transformInterface(
               cur.operationId,
               IFTag.Response,
-              active.content['application/json'].schema
-            ).map((val) => interfaceTemplate(val.name, val.keys, val.rawType))
+              active.content['application/json'].schema,
+            ).map((val) => interfaceTemplate(val.name, val.keys, val.rawType)),
           );
         }
       } else {
@@ -139,8 +139,8 @@ function interfaceHandler(conf: SwaggerConfig): string {
           ...transformInterface(
             resp,
             '',
-            cur.content['application/json'].schema
-          ).map((val) => interfaceTemplate(val.name, val.keys, val.rawType))
+            cur.content['application/json'].schema,
+          ).map((val) => interfaceTemplate(val.name, val.keys, val.rawType)),
         );
       }
     }
@@ -154,8 +154,8 @@ function interfaceHandler(conf: SwaggerConfig): string {
       if (cur) {
         interfaceList.push(
           ...transformInterface(resp, '', cur).map((del) =>
-            interfaceTemplate(del.name, del.keys)
-          )
+            interfaceTemplate(del.name, del.keys),
+          ),
         );
       }
     }
@@ -195,25 +195,25 @@ function buildCon(conf: SwaggerConfig, exclude?: Excludes) {
 
   const funcTemo = fs.readFileSync(
     Path.join(template, 'class', 'ApiCon.ts'),
-    'utf-8'
+    'utf-8',
   );
   const indexTemp = fs.readFileSync(
     Path.join(template, 'class', 'index.ts'),
-    'utf-8'
+    'utf-8',
   );
   const ifTemp = fs.readFileSync(
     Path.join(template, 'class', 'IApiCon.ts'),
-    'utf-8'
+    'utf-8',
   );
 
   const cTemp = fs.readFileSync(
     Path.join(template, 'class', 'CApiCon.ts'),
-    'utf-8'
+    'utf-8',
   );
 
   fs.writeFileSync(
     Path.join(baseGen, 'index.ts'),
-    indexHelper(indexTemp, exclude)
+    indexHelper(indexTemp, exclude),
   );
   fs.writeFileSync(Path.join(baseGen, 'ApiTypes.ts'), interfaceHandler(conf));
   const [con, iCon, cCon] = insertHandler(conf, [funcTemo, ifTemp, cTemp]);
@@ -245,7 +245,7 @@ function createPackage(name?: string, version?: string, module?: boolean) {
   };
   fs.writeFileSync(
     Path.join(baseR, 'package.json'),
-    JSON.stringify(conf, null, 2)
+    JSON.stringify(conf, null, 2),
   );
   const tsConf = {
     compilerOptions: {
@@ -267,7 +267,7 @@ function createPackage(name?: string, version?: string, module?: boolean) {
   };
   fs.writeFileSync(
     Path.join(baseR, 'tsconfig.json'),
-    JSON.stringify(tsConf, null, 2)
+    JSON.stringify(tsConf, null, 2),
   );
   const ignore = ['src', 'node_modules', '*.tgz'];
   fs.writeFileSync(Path.join(baseR, '.npmignore'), ignore.join('\n'));

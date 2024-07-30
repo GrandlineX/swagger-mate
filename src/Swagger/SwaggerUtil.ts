@@ -76,7 +76,7 @@ export default class SwaggerUtil {
       path.map((el) => ({
         path: getSPath(el),
         comp: getSComponent(el),
-      }))
+      })),
     );
   }
 
@@ -136,7 +136,7 @@ export default class SwaggerUtil {
 
   static mergeConfig(
     root: SwaggerConfig,
-    data: SwaggerConfig[]
+    data: SwaggerConfig[],
   ): SwaggerConfig {
     const out: SwaggerConfig = root;
     const path = new CMap<string, SwaggerRPathTypes>();
@@ -146,7 +146,7 @@ export default class SwaggerUtil {
 
     function fillKeys<X>(
       obj: Record<string, X> | undefined,
-      map: CMap<string, X>
+      map: CMap<string, X>,
     ) {
       if (obj) {
         const keys = Object.keys(obj);
