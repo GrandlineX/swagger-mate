@@ -1,7 +1,7 @@
 import { ConHandle, ConHandleResponse } from './BaseCon.js';
 
 async function fcTransform<T>(
-  r: Promise<Response>
+  r: Promise<Response>,
 ): Promise<ConHandleResponse<T>> {
   const res = await r;
   const head: Record<string, any> = {};
@@ -61,7 +61,7 @@ const FetchCon: ConHandle = {
           accept: 'application/json, text/plain, */*',
           ...config?.headers,
         },
-      })
+      }),
     );
   },
   post: async (url, body, config) => {
@@ -69,7 +69,7 @@ const FetchCon: ConHandle = {
       fetch(url, {
         method: 'POST',
         ...bodyTransform(body, config?.headers),
-      })
+      }),
     );
   },
   patch: async (url, body, config) => {
@@ -77,7 +77,7 @@ const FetchCon: ConHandle = {
       fetch(url, {
         method: 'PATCH',
         ...bodyTransform(body, config?.headers),
-      })
+      }),
     );
   },
   delete: async (url, config) => {
@@ -85,7 +85,7 @@ const FetchCon: ConHandle = {
       fetch(url, {
         method: 'DELETE',
         headers: config?.headers,
-      })
+      }),
     );
   },
 };

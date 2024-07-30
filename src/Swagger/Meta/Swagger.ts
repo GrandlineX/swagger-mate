@@ -18,7 +18,7 @@ const Swagger = (config: SwaggerConfig): ClassDecorator => {
 };
 
 function getSwaggerMeta<T extends ObjectLike>(
-  target: T
+  target: T,
 ): SwaggerConfig | undefined {
   return Reflect.getMetadata(swaggerKey, target.constructor.prototype);
 }
@@ -31,13 +31,13 @@ const SPath = (path: SwaggerRPath, prefix?: string): ClassDecorator => {
         path,
         prefix,
       },
-      target.prototype
+      target.prototype,
     );
   };
 };
 
 function getSPath<T extends ObjectLike>(
-  target: T
+  target: T,
 ): SwaggerPathInput | undefined {
   return Reflect.getMetadata(pathKey, target.constructor.prototype);
 }
@@ -49,7 +49,7 @@ const SComponent = (comp: SwaggerConfigComponents): ClassDecorator => {
 };
 
 function getSComponent<T extends ObjectLike>(
-  target: T
+  target: T,
 ): SwaggerConfigComponents | undefined {
   return Reflect.getMetadata(compKey, target.constructor.prototype);
 }

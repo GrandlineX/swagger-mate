@@ -27,6 +27,8 @@ class A extends CoreEntity {}
   const meta = SwaggerUtil.readMeta(
     PathHelp(getBaseFolder(), 'tests', 'openapi.json')
   );
-  SwaggerClient.genAPICConnector(meta, 'test123', '0.0.1');
+  SwaggerClient.genAPICConnector({
+    conf: meta, exclude: [], module: false, name: "test123", version: "0.0.1", writeMeta: false
+  });
   SwaggerUtil.serveMeta(meta, 9000);
 })();

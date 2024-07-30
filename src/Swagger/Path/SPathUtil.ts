@@ -83,7 +83,7 @@ export default class SPathUtil {
 
   static entityContent<T extends CoreEntity>(
     entity: T,
-    list?: boolean
+    list?: boolean,
   ): SwaggerContent | undefined {
     const schema = this.schemaFromEntity(entity);
 
@@ -110,7 +110,7 @@ export default class SPathUtil {
   static entityResponse<T extends CoreEntity>(
     entity: T,
     list?: boolean,
-    create?: boolean
+    create?: boolean,
   ): SwaggerRPathConfResponse {
     const code = create ? '201' : '200';
     const an: SwaggerRPathConfResponse = {};
@@ -204,7 +204,7 @@ export default class SPathUtil {
   }
 
   static schemaFromEntity<T extends CoreEntity>(
-    entity: T
+    entity: T,
   ): SSchemaEl | undefined {
     const schema: SSchemaEl = {
       type: 'object',
@@ -265,7 +265,7 @@ export default class SPathUtil {
 
   static schemaFromEntityView<A extends CoreEntity, B extends CoreEntity>(
     entity: A,
-    entityMap: B
+    entityMap: B,
   ): SSchemaEl {
     return {
       type: 'object',

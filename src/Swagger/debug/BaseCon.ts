@@ -41,17 +41,17 @@ export interface ConHandle {
   post<T, J>(
     url: string,
     body?: J,
-    config?: ConHandleConfig
+    config?: ConHandleConfig,
   ): Promise<ConHandleResponse<T>>;
   patch<T, J>(
     url: string,
     body?: J,
-    config?: ConHandleConfig
+    config?: ConHandleConfig,
   ): Promise<ConHandleResponse<T>>;
 
   delete<T>(
     url: string,
-    config?: ConHandleConfig
+    config?: ConHandleConfig,
   ): Promise<ConHandleResponse<T>>;
 }
 export default class BaseCon {
@@ -173,7 +173,7 @@ export default class BaseCon {
             headers: {
               Authorization: this.token(),
             },
-          }
+          },
         );
         return con.code === 200 || con.code === 201;
       } catch (e) {
@@ -232,7 +232,7 @@ export default class BaseCon {
     type: 'POST' | 'GET' | 'PATCH' | 'DELETE',
     path: string,
     body?: J,
-    config?: ConHandleConfig
+    config?: ConHandleConfig,
   ): Promise<HandleRes<T>> {
     if (!this.authorization || this.disconnected) {
       this.logger('Disconnected');

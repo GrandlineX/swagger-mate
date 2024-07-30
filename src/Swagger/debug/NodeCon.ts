@@ -20,7 +20,7 @@ function selectClient(url: string) {
 
 async function fcTransform<T>(
   message: IncomingMessage,
-  raw: any
+  raw: any,
 ): Promise<ConHandleResponse<T>> {
   let data = null;
 
@@ -42,7 +42,7 @@ async function fcTransform<T>(
 }
 function bodyTransform(
   r: any,
-  headers?: Record<string, HeaderType>
+  headers?: Record<string, HeaderType>,
 ): {
   headers: Record<string, HeaderType>;
   body: any;
@@ -74,7 +74,7 @@ async function makeRequest<T, J>(
   url: string,
   option: RequestOptions,
   body?: J,
-  config?: ConHandleConfig
+  config?: ConHandleConfig,
 ): Promise<ConHandleResponse<T>> {
   return new Promise((resolve) => {
     let headers: Record<string, any> = config?.headers || {};
@@ -106,7 +106,7 @@ async function makeRequest<T, J>(
           res.on('end', () => {
             resolve(fcTransform(res, data));
           });
-        }
+        },
       )
       .on('error', (err) => {
         console.log(`Error: ${err.message}`);
@@ -136,7 +136,7 @@ const NodeCon: ConHandle = {
         method: 'POST',
       },
       body,
-      config
+      config,
     );
   },
   patch: async (url, body, config) => {
@@ -146,7 +146,7 @@ const NodeCon: ConHandle = {
         method: 'PATCH',
       },
       body,
-      config
+      config,
     );
   },
   delete: async (url, config) => {
@@ -156,7 +156,7 @@ const NodeCon: ConHandle = {
         method: 'DELETE',
       },
       undefined,
-      config
+      config,
     );
   },
 };
