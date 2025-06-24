@@ -231,12 +231,12 @@ function createPackage(name?: string, version?: string, module?: boolean) {
     module: module ? 'dist/index.js' : undefined,
     type: module ? 'module' : undefined,
     dependencies: {
-      'form-data': '4.0.0',
-      axios: '1.1.3',
+      'form-data': '4.0.3',
+      axios: '1.10.0',
     },
     devDependencies: {
-      '@types/node': '^20.3.0',
-      typescript: '^5.1.3',
+      '@types/node': '22.15.32',
+      typescript: '5.8.3',
     },
     scripts: {
       build: 'tsc',

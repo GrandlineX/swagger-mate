@@ -80,7 +80,15 @@ async function makeRequest<T, J>(
     let headers: Record<string, any> = config?.headers || {};
     let transForm = null;
     if (body) {
-      transForm = bodyTransform(body, option.headers);
+      let safeHeaders: Record<string, HeaderType> | undefined;
+      if (
+        option.headers &&
+        typeof option.headers === 'object' &&
+        !Array.isArray(option.headers)
+      ) {
+        safeHeaders = option.headers as Record<string, HeaderType>;
+      }
+      transForm = bodyTransform(body, safeHeaders);
       headers = {
         ...headers,
         ...transForm.headers,
