@@ -9,11 +9,11 @@ import {
   getSComponent,
 } from '../index.js';
 import Root from './class/Root.js';
-import {ActonOne, ActonTwo, ActonThree, ActonFour, ActonFive} from './class/Actions.js';
+import {ActonOne, ActonTwo, ActonThree, ActonFour, ActonFive, ActonSix} from './class/Actions.js';
 import { Entity01 } from './class/Entity.js';
 
 const root = new Root();
-const elements = [new ActonOne(), new ActonTwo(), new ActonThree(),new ActonFour(),new ActonFive()];
+const elements = [new ActonOne(), new ActonTwo(), new ActonThree(),new ActonFour(),new ActonFive(),new ActonSix()];
 describe('MetaValidation', () => {
   test('root', () => {
     const meta = getSwaggerMeta(root);
@@ -31,6 +31,7 @@ describe('MetaValidation', () => {
   });
   test('call-write', () => {
     const meta = SwaggerUtil.metaExtractor(root, true, ...elements);
+
     expect(meta).not.toBeUndefined();
 
     if (meta) {

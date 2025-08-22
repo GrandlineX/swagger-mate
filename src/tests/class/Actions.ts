@@ -146,3 +146,28 @@ export class ActonFour {}
     responseCodes: ['200', '400', '500'],
 })
 export class ActonFive {}
+
+@SComponent({
+    schemas: {
+         ...SPathUtil.schemaEntryGen(new Entity01()),
+    }
+})
+@Route("POST",'/api/test2/:id',{
+    operationId: 'postData2',
+    description: 'upload data2',
+    summary: 'Description summary',
+    requestSchema: {
+        type: 'string'
+    },
+    responseSchema: new Entity01(),
+    parameters: [
+        {
+            in:"path",
+            name:"id",
+            required:true,
+        }
+    ],
+    responseType: "LIST",
+    responseCodes: ['200', '400', '500'],
+})
+export class ActonSix {}

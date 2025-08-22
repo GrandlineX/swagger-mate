@@ -1,7 +1,7 @@
 import * as Path from 'path';
 import * as fs from 'fs';
 import jsyaml from 'js-yaml';
-import { CMap, ObjectLike } from '@grandlinex/core';
+import { CMap, instanceOfEntity, ObjectLike } from '@grandlinex/core';
 import express from 'express';
 import { Server } from 'net';
 import * as process from 'process';
@@ -112,12 +112,24 @@ export default class SwaggerUtil {
       }
       if (route.meta.responseSchema && !conf.responses) {
         const ax = route.meta.responseCodes?.slice(1) || [];
-        conf.responses = SPathUtil.jsonResponse(
-          route.meta.responseCodes?.[0] || '200',
-          route.meta.responseSchema,
-          route.meta.responseType === 'LIST',
-          ...ax,
-        );
+        if (
+          typeof route.meta.responseSchema === 'string' ||
+          instanceOfEntity(route.meta.responseSchema)
+        ) {
+          conf.responses = SPathUtil.refResponse(
+            route.meta.responseCodes?.[0] || '200',
+            route.meta.responseSchema,
+            route.meta.responseType === 'LIST',
+            ...ax,
+          );
+        } else {
+          conf.responses = SPathUtil.jsonResponse(
+            route.meta.responseCodes?.[0] || '200',
+            route.meta.responseSchema,
+            route.meta.responseType === 'LIST',
+            ...ax,
+          );
+        }
       } else if (route.meta.responseCodes) {
         conf.responses = SPathUtil.defaultResponse(...route.meta.responseCodes);
       } else {
