@@ -1,6 +1,6 @@
 {
   "name": "@grandlinex/swagger-mate",
-  "version": "1.1.1",
+  "version": "1.2.0",
   "type": "module",
   "exports": {
     ".": {
@@ -38,14 +38,15 @@
     "swagger-mate-esm": "./dist/mjs/cli.js"
   },
   "dependencies": {
-    "@grandlinex/core": "1.1.1",
+    "@grandlinex/core": "1.2.0",
     "express": "5.1.0",
-    "form-data": "4.0.3",
+    "form-data": "4.0.4",
     "js-yaml": "4.1.0",
     "reflect-metadata": "0.2.2"
   },
   "devDependencies": {
     "axios": "1.11.0",
+    "node-fetch": "3.3.2",
     "cross-env": "10.0.0",
     "@types/express": "5.0.3",
     "@types/js-yaml": "4.0.9",

@@ -9,11 +9,11 @@ import {
   getSComponent,
 } from '../index.js';
 import Root from './class/Root.js';
-import {ActonOne, ActonTwo, ActonThree, ActonFour} from './class/Actions.js';
+import {ActonOne, ActonTwo, ActonThree, ActonFour, ActonFive} from './class/Actions.js';
 import { Entity01 } from './class/Entity.js';
 
 const root = new Root();
-const elements = [new ActonOne(), new ActonTwo(), new ActonThree(),new ActonFour()];
+const elements = [new ActonOne(), new ActonTwo(), new ActonThree(),new ActonFour(),new ActonFive()];
 describe('MetaValidation', () => {
   test('root', () => {
     const meta = getSwaggerMeta(root);

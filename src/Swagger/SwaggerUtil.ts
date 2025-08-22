@@ -12,10 +12,15 @@ import {
   SwaggerComSecuritySchemes,
   SwaggerConfig,
   SwaggerConfigComponents,
+  SwaggerPathInput,
+  SwaggerRPath,
+  SwaggerRPathConf,
   SwaggerRPathTypes,
 } from './Meta/SwaggerTypes.js';
 import { getSComponent, getSPath, getSwaggerMeta } from './Meta/Swagger.js';
 import PathHelp, { getBaseFolder } from '../PathHelp.js';
+import { getRouteMeta, RouteData } from './annotation/index.js';
+import { SPathUtil } from '../index.js';
 
 export default class SwaggerUtil {
   static writeMeta(conf: SwaggerConfig, kind: 'JSON' | 'YAML', path?: string) {
@@ -73,11 +78,98 @@ export default class SwaggerUtil {
 
     return this.merge(
       rootMeta,
-      path.map((el) => ({
-        path: getSPath(el),
-        comp: getSComponent(el),
-      })),
+      path.map((el) => {
+        const sPath: SwaggerPathInput | undefined = getSPath(el);
+        const meta = getRouteMeta(el);
+        let sMeta: SwaggerPathInput | undefined;
+        if (meta) {
+          sMeta = {
+            path: this.routeToSwaggerPath(meta),
+          };
+        }
+
+        return {
+          path: sPath || sMeta,
+          comp: getSComponent(el),
+        };
+      }),
     );
+  }
+
+  static routeToSwaggerPath(route: RouteData): SwaggerRPath {
+    const conf: SwaggerRPathConf = {
+      responses: route.meta?.responses,
+      description: route.meta?.description,
+      summary: route.meta?.summary,
+      tags: route.meta?.tags,
+      operationId: route.meta?.operationId,
+      requestBody: route.meta?.requestBody,
+      parameters: route.meta?.parameters,
+    };
+    if (route.meta) {
+      if (route.meta.requestSchema && !conf.requestBody) {
+        conf.requestBody = SPathUtil.jsonBody(route.meta.requestSchema);
+      }
+      if (route.meta.responseSchema && !conf.responses) {
+        const ax = route.meta.responseCodes?.slice(1) || [];
+        conf.responses = SPathUtil.jsonResponse(
+          route.meta.responseCodes?.[0] || '200',
+          route.meta.responseSchema,
+          route.meta.responseType === 'LIST',
+          ...ax,
+        );
+      } else if (route.meta.responseCodes) {
+        conf.responses = SPathUtil.defaultResponse(...route.meta.responseCodes);
+      } else {
+        conf.responses = SPathUtil.defaultResponse('200');
+      }
+    }
+
+    const convertedPath =
+      route.meta?.pathOverride ||
+      route.path
+        .split('/')
+        .map((e) => {
+          if (e.startsWith(':')) {
+            return `{${e.substring(1)}}`;
+          }
+          return e;
+        })
+        .join('/');
+
+    const path: SwaggerRPath = {};
+    switch (route.type) {
+      case 'POST':
+        path[convertedPath] = {
+          post: conf,
+        };
+        break;
+      case 'GET':
+        path[convertedPath] = {
+          get: conf,
+        };
+        break;
+      case 'PATCH':
+        path[convertedPath] = {
+          patch: conf,
+        };
+        break;
+      case 'DELETE':
+        path[convertedPath] = {
+          delete: conf,
+        };
+        break;
+      case 'USE':
+        path[convertedPath] = {
+          get: conf,
+          patch: conf,
+          post: conf,
+          delete: conf,
+        };
+        break;
+      default:
+    }
+    return path;
   }
 
   static merge(root: SwaggerConfig, data: MergeInputType[]): SwaggerConfig {

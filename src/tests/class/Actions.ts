@@ -1,6 +1,7 @@
 // eslint-disable-next-line max-classes-per-file
 import { Entity01 } from './Entity.js';
-import { SPath, SPathUtil, SComponent } from '../../index.js';
+import { SPath, SPathUtil, SComponent, Route } from '../../index.js';
+
 
 @SPath({
   '/': {
@@ -123,3 +124,25 @@ export class ActonThree {}
   },
 })
 export class ActonFour {}
+
+@Route("POST",'/api/test/:id',{
+    operationId: 'postData',
+    description: 'upload data',
+    summary: 'Description summary',
+    requestSchema: {
+        type: 'string'
+    },
+    responseSchema:{
+        type: 'string'
+    },
+    parameters: [
+        {
+            in:"path",
+            name:"id",
+            required:true,
+        }
+    ],
+    responseType: "LIST",
+    responseCodes: ['200', '400', '500'],
+})
+export class ActonFive {}

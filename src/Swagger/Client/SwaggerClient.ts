@@ -231,8 +231,8 @@ function createPackage(name?: string, version?: string, module?: boolean) {
     module: module ? 'dist/index.js' : undefined,
     type: module ? 'module' : undefined,
     dependencies: {
-      'form-data': '4.0.3',
-      axios: '1.10.0',
+      'form-data': '4.0.4',
+      axios: '1.11.0',
     },
     devDependencies: {
       '@types/node': '22.15.32',
