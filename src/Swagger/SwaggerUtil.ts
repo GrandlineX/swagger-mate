@@ -107,10 +107,14 @@ export default class SwaggerUtil {
       parameters: route.meta?.parameters,
     };
     if (route.meta) {
-      if (route.meta.requestSchema && !conf.requestBody) {
-        conf.requestBody = SPathUtil.jsonBody(route.meta.requestSchema);
+      // Handle requestBody
+      if (!conf.requestBody) {
+        if (route.meta.requestSchema) {
+          conf.requestBody = SPathUtil.jsonBody(route.meta.requestSchema);
+        }
       }
-      if (route.meta.responseSchema && !conf.responses) {
+      // Handle responses
+      if (route.meta.responseSchema) {
         const ax = route.meta.responseCodes?.slice(1) || [];
         if (
           typeof route.meta.responseSchema === 'string' ||
@@ -132,7 +136,8 @@ export default class SwaggerUtil {
         }
       } else if (route.meta.responseCodes) {
         conf.responses = SPathUtil.defaultResponse(...route.meta.responseCodes);
-      } else {
+      }
+      if (!conf.responses) {
         conf.responses = SPathUtil.defaultResponse('200');
       }
     }
