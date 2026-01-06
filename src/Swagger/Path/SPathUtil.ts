@@ -18,6 +18,7 @@ import {
 function resolveDBType(dType: DataType): SDataType {
   switch (dType) {
     case 'int':
+    case 'long':
       return 'integer';
     case 'double':
     case 'float':
@@ -221,11 +222,10 @@ export default class SPathUtil {
     keys.forEach((k) => {
       const cMeta = getColumnMeta(entity, k);
       if (cMeta && schema.properties) {
-        if (!cMeta.canBeNull) {
-          schema.required?.push(k as string);
-        }
+        schema.required!.push(k as string);
         schema.properties[k as string] = {
           type: resolveDBType(cMeta.dataType),
+          nullable: cMeta.canBeNull,
         };
       }
     });

@@ -91,6 +91,7 @@ export type SSchemaEl =
       items?: SSchemaEl;
       required?: string[];
       enum?: string[];
+      nullable?: boolean;
     }
   | SwaggerRRef;
 

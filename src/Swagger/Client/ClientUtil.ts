@@ -4,6 +4,7 @@ export type IfMappingKeyType = {
   key: string;
   type: string;
   required?: boolean;
+  nullable?: boolean;
 };
 export type IfMappingType = {
   name: string;
@@ -12,21 +13,41 @@ export type IfMappingType = {
 };
 
 /**
- * Save string from unknown
- * @param e
+ * Returns a string representation of the given value. If the value is falsy,
+ * an empty string is returned.
+ *
+ * @param e - The value to convert to a string.
+ * @returns The string representation of `e`, or an empty string if `e` is falsy.
  */
 export function eS(e: any): string {
   return e || '';
 }
+
 /**
- * Optional field
- * @param required
+ * Returns a type annotation delimiter based on whether a value is required.
+ *
+ * @param {boolean} [required] - Indicates if the value is required. If omitted or false, the value is considered optional.
+ * @returns {string} A colon (`:`) for required values or a question mark followed by a colon (`?:`) for optional values.
  */
 export function rq(required?: boolean): string {
   if (!required) {
     return '?:';
   }
   return ':';
+}
+
+/**
+ * Returns a type representation based on whether the value should be nullable.
+ *
+ * @param {string} type - The base type name to return when the value is not nullable.
+ * @param {boolean} nullable - Indicates if the type should be considered nullable. If `true`, the function returns a colon (`:`); if `false`, it returns the original type string.
+ * @return {string} The original type string when `nullable` is `false`, otherwise a colon (`:`) to represent a nullable type in the consuming context.
+ */
+export function rN(type: string, nullable?: boolean): string {
+  if (nullable) {
+    return `${type} | null`;
+  }
+  return type;
 }
 
 export function sK(e: string): string {
@@ -105,21 +126,43 @@ export function transformInterface(
           for (const key of keys) {
             const prop = schema.properties[key];
             const isRequired = schema.required && schema.required.includes(key);
+
             if (!isSwaggerRef(prop)) {
+              const nullable = prop.nullable ?? false;
               switch (prop.type) {
                 case 'number':
                 case 'integer':
-                  cur.keys.push({ key, type: 'number', required: isRequired });
+                  cur.keys.push({
+                    key,
+                    type: 'number',
+                    required: isRequired,
+                    nullable,
+                  });
                   break;
                 case 'string':
-                  cur.keys.push({ key, type: 'string', required: isRequired });
+                  cur.keys.push({
+                    key,
+                    type: 'string',
+                    required: isRequired,
+                    nullable,
+                  });
                   break;
                 case 'boolean':
-                  cur.keys.push({ key, type: 'boolean', required: isRequired });
+                  cur.keys.push({
+                    key,
+                    type: 'boolean',
+                    required: isRequired,
+                    nullable,
+                  });
                   break;
                 case 'object':
                   if (!prop.properties) {
-                    cur.keys.push({ key, type: 'any', required: isRequired });
+                    cur.keys.push({
+                      key,
+                      type: 'any',
+                      required: isRequired,
+                      nullable,
+                    });
                   } else {
                     cur.keys.push({
                       key,
@@ -135,12 +178,14 @@ export function transformInterface(
                       key,
                       type: `${typeByRef(prop.items.$ref)}[]`,
                       required: isRequired,
+                      nullable,
                     });
                   } else {
                     cur.keys.push({
                       key,
                       type: `${ifName(cur.name, `${key}Element`)}[]`,
                       required: isRequired,
+                      nullable,
                     });
                     out.push(...transformInterface(cur.name, key, prop));
                   }
@@ -152,6 +197,7 @@ export function transformInterface(
                 key,
                 type: typeByRef(prop.$ref),
                 required: isRequired,
+                nullable: schema.nullable ?? false,
               });
             }
           }

@@ -230,13 +230,13 @@ function createPackage(name?: string, version?: string, module?: boolean) {
     types: 'dist/index.d.ts',
     module: module ? 'dist/index.js' : undefined,
     type: module ? 'module' : undefined,
-    dependencies: {
-      'form-data': '4.0.4',
-      axios: '1.11.0',
-    },
     devDependencies: {
       '@types/node': '22.15.32',
-      typescript: '5.8.3',
+      typescript: '5.9.2',
+    },
+    peerDependencies: {
+      axios: '>=1.13.2',
+      'form-data': '>=4.0.5',
     },
     scripts: {
       build: 'tsc',

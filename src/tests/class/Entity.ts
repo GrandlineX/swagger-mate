@@ -8,8 +8,15 @@ export class Entity01 extends CoreEntity {
   })
   title: string;
 
+  @Column({
+    dataType: 'long',
+    canBeNull: true
+  })
+  count: number;
+
   constructor() {
     super();
     this.title = '';
+    this.count = 0;
   }
 }

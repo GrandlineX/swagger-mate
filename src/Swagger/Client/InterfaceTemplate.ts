@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import {IfMappingKeyType, rq, S, sK} from './ClientUtil.js';
+import { IfMappingKeyType, rq, S, sK, rN } from './ClientUtil.js';
 
 function interfaceTemplate(
     IF_NAME: string,
@@ -11,7 +11,7 @@ function interfaceTemplate(
     }
 
     return `export interface ${IF_NAME} {
-${types.map(({key, type, required}) => `${S(2)}${sK(key)}${rq(required)} ${type};`).join('\n')}
+${types.map(({key, type, required, nullable}) => `${S(2)}${sK(key)}${rq(required)} ${rN(type,nullable)};`).join('\n')}
 }`;
 }
 

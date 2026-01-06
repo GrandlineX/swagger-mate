@@ -59,6 +59,10 @@ import { SPathUtil, Swagger } from '../../index.js';
                   name: {
                     type: 'string',
                   },
+                  enumType: {
+                    type: 'string',
+                    enum: ['one', 'two', 'three'],
+                  },
                 },
               },
             },
