@@ -61,7 +61,7 @@ describe('WebInterface', () => {
   test('start', async () => {
     expect(meta).not.toBeUndefined();
     if (meta) {
-      app = await SwaggerUtil.serveMeta(meta, 9009);
+      app = await SwaggerUtil.serveMeta(meta, {port: 9009});
     }
     expect(app).not.toBeNull();
   });
