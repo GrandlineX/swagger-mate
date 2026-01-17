@@ -11,14 +11,19 @@ export enum ActionMode {
 const routeKey = Symbol('route');
 
 export type ActionTypes = 'POST' | 'GET' | 'USE' | 'PATCH' | 'DELETE';
-export type ResponseTypes = 'LIST';
+/**
+ * LIST - Response is an array of items
+ * SINGLE - Response is a single item (default)
+ */
+export type ResponseRequestTypes = 'LIST' | 'SINGLE';
 
 export type RouteMeta = {
   pathOverride?: string;
   mode?: ActionMode;
-  requestSchema?: SSchemaEl;
+  requestSchema?: SSchemaEl | CoreEntity | string;
   responseSchema?: SSchemaEl | CoreEntity | string;
-  responseType?: ResponseTypes;
+  requestType?: ResponseRequestTypes;
+  responseType?: ResponseRequestTypes;
   responseCodes?: HttpStatusTypes[];
 } & SwaggerRPathConf;
 export type RouteData = {

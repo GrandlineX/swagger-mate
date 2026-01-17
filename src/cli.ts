@@ -51,7 +51,11 @@ async function run() {
       const auth = process.env.SW_AUTH || undefined;
       const port = process.env.SW_PORT || undefined;
 
-      SwaggerUtil.serveMeta(conf, port ? parseInt(port, 10) : undefined, auth);
+      SwaggerUtil.serveMeta(conf, {
+        port: port ? parseInt(port, 10) : undefined,
+        auth,
+        type: 'rapi-doc',
+      });
     }
     if (arg[arg.length - 2] === '--build') {
       console.log('Building Swagger Meta');

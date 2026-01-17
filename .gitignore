@@ -27,3 +27,4 @@ src/tests/testSpecs/
 /res/templates/class/BaseCon.ts
 /res/templates/class/NodeCon.ts
 /res/templates/class/FetchCon.ts
+/res/templates/class/ApiTypes.ts

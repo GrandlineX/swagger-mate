@@ -3,14 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <title>GrandLineX Swagger UI</title>
-    <link rel="stylesheet" type="text/css" href="swagger-ui.css">
+    <link rel="stylesheet" type="text/css" href="./swagger-ui.css">
+    <style>
+        .download-url-wrapper{
+            visibility: hidden;
+        }
+    </style>
 </head>
 <body>
 
 <div id="swagger-ui"></div>
 
-<script src="swagger-ui-standalone-preset.js"></script>
-<script src="swagger-ui-bundle.js"></script>
+<script src="./swagger-ui-standalone-preset.js"></script>
+<script src="./swagger-ui-bundle.js"></script>
 
 <script>
     window.onload = function() {
@@ -28,6 +33,9 @@
                     const [,dx] = key.split("=");
                     ui.preauthorizeApiKey("bearerAuth", dx)
                 }
+            },
+            scarfSettings: {
+                enabled: false
             },
             dom_id: '#swagger-ui',
             deepLinking: true,

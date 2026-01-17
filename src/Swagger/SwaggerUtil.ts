@@ -1,7 +1,13 @@
 import * as Path from 'path';
 import * as fs from 'fs';
 import jsyaml from 'js-yaml';
-import { CMap, instanceOfEntity, ObjectLike } from '@grandlinex/core';
+import {
+  CMap,
+  CoreLogChannel,
+  DefaultLogger,
+  instanceOfEntity,
+  ObjectLike,
+} from '@grandlinex/core';
 import express from 'express';
 import { Server } from 'net';
 import * as process from 'process';
@@ -23,6 +29,16 @@ import { getRouteMeta, RouteData } from './annotation/index.js';
 import { SPathUtil } from '../index.js';
 
 export default class SwaggerUtil {
+  static logger: CoreLogChannel | null;
+
+  static getLogger() {
+    if (!this.logger) {
+      const logger = new DefaultLogger();
+      this.logger = new CoreLogChannel('SwaggerUtil', logger);
+    }
+    return this.logger!;
+  }
+
   static writeMeta(conf: SwaggerConfig, kind: 'JSON' | 'YAML', path?: string) {
     if (kind === 'JSON') {
       const p = Path.join(path || process.cwd(), 'openapi.json');
@@ -38,12 +54,34 @@ export default class SwaggerUtil {
     try {
       return JSON.parse(file);
     } catch (e) {
+      this.getLogger().error(e);
       return null;
     }
   }
 
-  static async serveMeta(conf: SwaggerConfig, port?: number, auth?: string) {
-    const resFiles = PathHelp(getBaseFolder(), '..', 'res', 'html');
+  /**
+   * Serves a meta page for Swagger UI or rapi-doc.
+   *
+   * @param {SwaggerConfig} conf The swagger configuration to expose via `/spec`.
+   * @param {Object} [option] Options for serving the meta page.
+   * @param {'swagger-ui'|'rapi-doc'} [option.type='swagger-ui'] The type of UI to serve.
+   * @param {number} [option.port] The port to listen on. Defaults to 9000.
+   * @param {string} [option.auth] Optional authentication key appended to the URL.
+   * @returns {Promise<Server|null>} A promise that resolves with the created server instance or null.
+   */
+  static async serveMeta(
+    conf: SwaggerConfig,
+    option?: {
+      type?: 'swagger-ui' | 'rapi-doc';
+      port?: number;
+      auth?: string;
+    },
+  ) {
+    const type = option?.type ?? 'swagger-ui';
+    const port = option?.port || 9000;
+    const auth = option?.auth;
+
+    const resFiles = PathHelp(getBaseFolder(), '..', 'res', 'html', type);
     const key = auth ? `?auth=${auth}` : '';
     const app = express();
     app.use('/', express.static(resFiles));
@@ -52,8 +90,10 @@ export default class SwaggerUtil {
     });
 
     return new Promise<Server | null>((resolve) => {
-      const s = app.listen(port || 9000, () => {
-        console.log(`listen on http://localhost:${port || 9000}${key}#`);
+      const s = app.listen(port, () => {
+        this.getLogger().log(
+          `${type} listen on http://localhost:${port}${key}#`,
+        );
         resolve(s);
       });
     });
@@ -110,7 +150,17 @@ export default class SwaggerUtil {
       // Handle requestBody
       if (!conf.requestBody) {
         if (route.meta.requestSchema) {
-          conf.requestBody = SPathUtil.jsonBody(route.meta.requestSchema);
+          if (
+            typeof route.meta.requestSchema === 'string' ||
+            instanceOfEntity(route.meta.requestSchema)
+          ) {
+            conf.requestBody = SPathUtil.refRequest(
+              route.meta.requestSchema,
+              route.meta.responseType === 'LIST',
+            );
+          } else {
+            conf.requestBody = SPathUtil.jsonBody(route.meta.requestSchema);
+          }
         }
       }
       // Handle responses

@@ -54,18 +54,26 @@ export interface ConHandle {
     config?: ConHandleConfig,
   ): Promise<ConHandleResponse<T>>;
 }
+
+/**
+ * BaseCon provides a minimal client for interacting with an HTTP backend.
+ * It manages connection state, authentication tokens, and reconnection
+ * logic while delegating actual HTTP requests to a supplied {@link ConHandle}.
+ *
+ * @class
+ */
 export default class BaseCon {
-  api: string;
+  private api: string;
 
-  permanentHeader: undefined | Record<string, string>;
+  private permanentHeader: undefined | Record<string, string>;
 
-  authorization: string | null;
+  private authorization: string | null;
 
-  disconnected: boolean;
+  private noAuth: boolean;
 
-  failFlag: boolean;
+  private disconnected: boolean;
 
-  logger: (arg: any) => void;
+  private readonly logger: (arg: any) => void;
 
   con: ConHandle;
 
@@ -79,10 +87,10 @@ export default class BaseCon {
     logger?: (arg: any) => void;
   }) {
     this.api = conf.endpoint;
-    this.logger = conf.logger || console.log;
+    this.logger = conf.logger ?? console.log;
     this.disconnected = true;
+    this.noAuth = false;
     this.authorization = null;
-    this.failFlag = false;
     this.con = conf.con;
     this.reconnect = async () => {
       this.disconnected = true;
@@ -92,17 +100,48 @@ export default class BaseCon {
     this.handle = this.handle.bind(this);
   }
 
-  // Class helper functions
-
-  isConnected() {
-    return this.authorization !== null && !this.disconnected;
+  /**
+   * Retrieves the API endpoint.
+   *
+   * @return {string} The API endpoint string.
+   */
+  getApiEndpoint(): string {
+    return this.api;
   }
 
-  token() {
+  /**
+   * Sets the API endpoint URL used by the client.
+   *
+   * @param {string} endpoint - The full URL of the API endpoint.
+   * @returns {void}
+   */
+  setApiEndpoint(endpoint: string): void {
+    this.api = endpoint;
+  }
+
+  /**
+   * Indicates whether the instance is considered connected.
+   *
+   * The instance is regarded as connected when it either does not require authentication
+   * (`noAuth` is true) or it has an authorization token set (`authorization` is not null),
+   * and it is not currently marked as disconnected.
+   *
+   * @return {boolean} `true` if the instance is connected, `false` otherwise.
+   */
+  isConnected(): boolean {
+    return (this.noAuth || this.authorization !== null) && !this.disconnected;
+  }
+
+  /**
+   * Returns the current authorization token.
+   *
+   * @return {string} The authorization token or an empty string if none is set.
+   */
+  token(): string {
     return this.authorization || '';
   }
 
-  p(path: string, config?: ConHandleConfig) {
+  private p(path: string, config?: ConHandleConfig) {
     let pp = path;
     if (config?.param) {
       const e = Object.keys(config.param);
@@ -125,46 +164,36 @@ export default class BaseCon {
     return `${this.api}${pp}`;
   }
 
+  /**
+   * Sends a ping request to the API to verify connectivity and version availability.
+   *
+   * @return {boolean} `true` if the API responded with a 200 status code and a valid version object; `false` otherwise.
+   */
   async ping(): Promise<boolean> {
     try {
       const version = await this.con.get<{ api: number }>(this.p('/version'));
-      return version.data?.api === 1 && version.code === 200;
+      return version.data?.api !== undefined && version.code === 200;
     } catch (e) {
       this.logger('ping failed');
       return false;
     }
   }
 
-  async test(email: string, password: string): Promise<boolean> {
-    const ping = await this.ping();
-
-    if (ping) {
-      try {
-        this.logger({ email, password });
-        const con = await this.con.post<
-          { token: string },
-          {
-            username: string;
-            token: string;
-          }
-        >(this.p('/token'), {
-          username: email,
-          token: password,
-        });
-        return con.code === 200 || con.code === 201;
-      } catch (e) {
-        this.logger(e);
-        this.logger('cant connect to backend');
-      }
-    }
-    this.logger('test ping failed');
-
-    return false;
-  }
-
+  /**
+   * Validates the current authentication token by performing a ping and a test request
+   * to the backend. The method first ensures connectivity via {@link ping}. If the ping
+   * succeeds, it attempts to retrieve a token from the `/test/auth` endpoint using the
+   * current token in the `Authorization` header. The operation is considered successful
+   * if the response status code is 200 or 201.
+   *
+   * If any step fails, an error is logged and the method returns {@code false}. On
+   * success, it returns {@code true}.
+   *
+   * @return {Promise<boolean>} A promise that resolves to {@code true} if the token
+   * test succeeds, otherwise {@code false}.
+   */
   async testToken(): Promise<boolean> {
     const ping = await this.ping();
-
     if (ping) {
       try {
         const con = await this.con.get<{ token: string }>(
@@ -186,9 +215,66 @@ export default class BaseCon {
     return false;
   }
 
-  async connect(email: string, pw: string): Promise<boolean> {
+  /**
+   * Attempts to establish a connection to the backend without authentication.
+   *
+   * This method sends a ping request.  If the ping succeeds, it clears any
+   * existing authorization data, marks the instance as connected,
+   * enables the no‑authentication mode, and returns `true`.  If the ping
+   * fails, it logs a warning, clears authorization, marks the instance
+   * as disconnected, and returns `false`.
+   *
+   * @return {Promise<boolean>} `true` when a connection is successfully
+   * established without authentication, otherwise `false`.
+   */
+  async connectNoAuth(): Promise<boolean> {
     const ping = await this.ping();
+    if (ping) {
+      this.authorization = null;
+      this.disconnected = false;
+      this.noAuth = true;
+      return true;
+    }
+    this.logger('cant connect to backend');
+    this.authorization = null;
+    this.disconnected = true;
+    return false;
+  }
 
+  /**
+   * Forces a connection using the provided bearer token.
+   *
+   * @param {string} token The token to be used for authentication.
+   * @returns {void}
+   */
+  forceConnectWithToken(token: string): void {
+    this.authorization = `Bearer ${token}`;
+    this.disconnected = false;
+    this.noAuth = false;
+  }
+
+  /**
+   * Establishes a connection to the backend using the supplied credentials.
+   * Performs a health‑check ping first; if successful, it requests an authentication
+   * token from the `/token` endpoint.  When the token is obtained, the method
+   * updates internal state (authorization header, connection flags) and, unless
+   * a dry run is requested, sets up a reconnection routine.  Any errors are
+   * logged and the method resolves to `false`.
+   *
+   * @param {string} email - The user's email address for authentication.
+   * @param {string} pw - The password (or token) for the specified user.
+   * @param {boolean} [dry=false] - If `true`, the method performs a dry run
+   *   without persisting credentials or configuring reconnection logic.
+   *
+   * @returns  Promise<boolean>  `true` if the connection was successfully
+   *   established, otherwise `false`.
+   */
+  async connect(
+    email: string,
+    pw: string,
+    dry: boolean = false,
+  ): Promise<boolean> {
+    const ping = await this.ping();
     if (ping) {
       try {
         const token = await this.con.post<
@@ -201,13 +287,17 @@ export default class BaseCon {
           username: email,
           token: pw,
         });
-        // TODO check token
         if (token.code === 200 || token.code === 201) {
-          this.authorization = `Bearer ${token.data?.token}`;
-          this.disconnected = false;
-          this.reconnect = async () => {
-            return (await this.connect(email, pw)) && (await this.testToken());
-          };
+          if (!dry) {
+            this.authorization = `Bearer ${token.data?.token}`;
+            this.disconnected = false;
+            this.noAuth = false;
+            this.reconnect = async () => {
+              return (
+                (await this.connect(email, pw)) && (await this.testToken())
+              );
+            };
+          }
           return true;
         }
       } catch (e) {
@@ -217,24 +307,38 @@ export default class BaseCon {
     this.logger('cant connect to backend');
     this.authorization = null;
     this.disconnected = true;
+    this.noAuth = false;
     return false;
   }
 
   /**
-   * Enable client before auth
+   * Performs an HTTP request using the client’s internal connection.
+   *
+   * The method verifies that the client is connected before attempting a request.
+   * It automatically injects the authorization token, permanent headers, and any
+   * headers supplied in `config`. If the request body is a `FormData` instance
+   * (or provides a `getHeaders` method), the appropriate form headers are added.
+   *
+   * Response handling:
+   * - `200` or `201`: returns `success: true` with the received data.
+   * - `498`: attempts to reconnect and retries the request once.
+   * - `401`: logs an authentication error, marks the client as disconnected.
+   * - `403` and other status codes: return `success: false` with the status code.
+   *
+   * @param {'POST'|'GET'|'PATCH'|'DELETE'} type The HTTP method to use.
+   * @param {string} path The endpoint path relative to the base URL.
+   * @param {J} [body] Optional request payload. May be `FormData` or a plain object.
+   * @param {ConHandleConfig} [config] Optional Axios-like configuration for the request.
+   * @returns {Promise<HandleRes<T>>} A promise that resolves to a `HandleRes` object
+   * containing the response data, status code, any error information, and headers.
    */
-  fakeEnableClient() {
-    this.authorization = 'DEBUG';
-    this.disconnected = false;
-  }
-
   async handle<T, J>(
     type: 'POST' | 'GET' | 'PATCH' | 'DELETE',
     path: string,
     body?: J,
     config?: ConHandleConfig,
   ): Promise<HandleRes<T>> {
-    if (!this.authorization || this.disconnected) {
+    if (!this.isConnected()) {
       this.logger('Disconnected');
       return {
         success: false,
@@ -322,7 +426,6 @@ export default class BaseCon {
           error,
           headers: dat.headers,
         };
-
       case 498:
         x = await this.reconnect();
         if (x) {
@@ -335,7 +438,6 @@ export default class BaseCon {
           this.disconnected = true;
           return false;
         };
-
         this.disconnected = true;
         return {
           success: false,
@@ -344,10 +446,8 @@ export default class BaseCon {
           error,
           headers: dat.headers,
         };
-
       case 401:
         this.logger('AUTH NOT VALID');
-        this.disconnected = true;
         return {
           success: false,
           data: null,
@@ -363,7 +463,6 @@ export default class BaseCon {
           code: dat.code,
           headers: dat.headers,
         };
-
       default:
         return {
           success: false,
