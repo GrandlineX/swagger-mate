@@ -1,45 +1,15 @@
-import {
-  CoreEntity,
-  DataType,
-  getEntityMeta,
-  XUtil,
-  getColumnMeta,
-} from '@grandlinex/core';
+import { CoreEntity, getEntityMeta, XUtil } from '@grandlinex/core';
 import map from './SUtilMap.js';
-import { HttpStatusTypes, SDataType } from '../Meta/SwaggerTypesStatic.js';
+import { HttpStatusTypes } from '../Meta/SwaggerTypesStatic.js';
 import {
-  isSwaggerRef,
   SKey,
   SSchemaEl,
+  SSchemaElObj,
   SwaggerContent,
   SwaggerRPathConfResponse,
   SwaggerRPathReqBody,
 } from '../Meta/SwaggerTypes.js';
-
-function resolveDBType(dType: DataType): SDataType {
-  switch (dType) {
-    case 'int':
-    case 'long':
-      return 'integer';
-    case 'double':
-    case 'float':
-      return 'number';
-    case 'blob':
-      return 'string';
-    case 'string':
-    case 'text':
-    case 'uuid':
-      return 'string';
-    case 'boolean':
-      return 'boolean';
-    case 'date':
-      return 'string';
-    case 'json':
-      return 'object';
-    default:
-      throw Error('TypeNotSupported');
-  }
-}
+import { ESchemaEditor } from './ESchemaEditor.js';
 
 export default class SPathUtil {
   /**
@@ -315,36 +285,14 @@ export default class SPathUtil {
    * If no metadata is found for the provided entity, the method returns `undefined`.
    *
    * @param {T} entity - The entity instance for which to create a schema.
-   * @returns {SSchemaEl | undefined} The generated schema object, or `undefined`
+   * @returns {SSchemaElObj | undefined} The generated schema object, or `undefined`
    *          if the entity's metadata could not be retrieved.
+   * @deprecated Use {@link ESchemaEditor.schemaFromEntity} instead.
    */
   static schemaFromEntity<T extends CoreEntity>(
     entity: T,
-  ): SSchemaEl | undefined {
-    const schema: SSchemaEl = {
-      type: 'object',
-      properties: {},
-    };
-    const meta = getEntityMeta(entity);
-    if (!meta) {
-      return undefined;
-    }
-    schema.description = `Entity: ${meta.name}`;
-    schema.required = [];
-    const keys = Object.keys(entity) as (keyof T)[];
-
-    keys.forEach((k) => {
-      const cMeta = getColumnMeta(entity, k);
-      if (cMeta && schema.properties) {
-        schema.required!.push(k as string);
-        schema.properties[k as string] = {
-          type: resolveDBType(cMeta.dataType),
-          nullable: cMeta.canBeNull,
-        };
-      }
-    });
-
-    return schema;
+  ): SSchemaElObj | undefined {
+    return ESchemaEditor.schemaFromEntity(entity);
   }
 
   /**
@@ -362,7 +310,7 @@ export default class SPathUtil {
       description: `Entity: ${meta.name}`,
       content: {
         'application/json': {
-          schema: this.schemaFromEntity(entity) as SSchemaEl,
+          schema: ESchemaEditor.schemaFromEntity(entity) as SSchemaEl,
         },
       },
     };
@@ -374,12 +322,12 @@ export default class SPathUtil {
    * @param {CoreEntity[]} e The entities for which schema entries should be generated.
    * @return {SKey<SSchemaEl>} An object whose keys are entity names and values are the schemas derived from those entities.
    */
-  static schemaEntryGen(...e: CoreEntity[]): SKey<SSchemaEl> {
-    const out: SKey<any> = {};
+  static schemaEntryGen(...e: CoreEntity[]): SKey<SSchemaElObj> {
+    const out: SKey<SSchemaElObj> = {};
     e.forEach((el) => {
       const meta = getEntityMeta(el);
       if (meta) {
-        out[meta.name] = SPathUtil.schemaFromEntity(el);
+        out[meta.name] = ESchemaEditor.schemaFromEntity(el)!;
       }
     });
     return out;
@@ -403,173 +351,13 @@ export default class SPathUtil {
         i: {
           type: 'integer',
         },
-        dat: this.schemaFromEntity(entity) as SSchemaEl,
-        join_map: this.schemaFromEntity(entityMap) as SSchemaEl,
+        dat: ESchemaEditor.schemaFromEntity(entity) as SSchemaEl,
+        join_map: ESchemaEditor.schemaFromEntity(entityMap) as SSchemaEl,
       },
     };
   }
 
-  /**
-   * Extends an entity schema object by merging additional schema options.
-   *
-   * @param {CoreEntity} entity
-   *   The entity for which the schema should be extended.
-   *
-   * @param {...Object} options
-   *   One or more objects defining schema extensions. Each object may contain:
-   *   - `key` (string): The property key to add or extend.
-   *   - `list` (boolean, optional): Indicates whether the property is a list.
-   *   - `entity` (CoreEntity, optional): The entity type for the property.
-   *   - `schema` (SSchemaEl, optional): A custom schema definition for the property.
-   *   - `required` (boolean, optional): Whether the property is required.
-   *
-   * @return {SSchemaEl}
-   *   The resulting schema element. If a single property is returned by
-   *   `extendEntitySchema`, its schema is returned directly; otherwise an
-   *   object schema with a type of `'object'` is returned.
-   */
-  public static extendEntitySchemaObject(
-    entity: CoreEntity,
-    ...options: {
-      key: string;
-      list?: boolean;
-      entity?: CoreEntity;
-      schema?: SSchemaEl;
-      required?: boolean;
-    }[]
-  ): SSchemaEl {
-    const schema = this.extendEntitySchema(entity, ...options);
-    const ent = Object.entries(schema);
-    if (ent.length === 1) {
-      return ent[0][1];
-    }
-    return {
-      type: 'object',
-    };
-  }
-
-  /**
-   * Extends the schema of a given {@link CoreEntity} with additional properties.
-   *
-   * @param {CoreEntity} entity
-   *   The entity whose schema will be extended.
-   *
-   * @param {...{
-   *   key: string,
-   *   list?: boolean,
-   *   entity?: CoreEntity,
-   *   schema?: SSchemaEl,
-   *   required?: boolean
-   * }} options
-   *   One or more option objects specifying the extensions to apply. Each option
-   *   may provide either a direct schema (`schema`) or an entity reference
-   *   (`entity`). The `list` flag indicates whether the property should be
-   *   represented as an array of the provided schema. The `required` flag
-   *   adds the property to the schema’s required list.
-   *
-   * @returns {SKey<SSchemaEl>}
-   *   An object containing the updated schema for the entity, keyed by the
-   *   entity’s name. If the entity metadata cannot be found, an empty
-   *   object is returned.
-   */
-  public static extendEntitySchema(
-    entity: CoreEntity,
-    ...options: {
-      key: string;
-      list?: boolean;
-      entity?: CoreEntity;
-      schema?: SSchemaEl;
-      required?: boolean;
-    }[]
-  ): SKey<SSchemaEl> {
-    const meta = getEntityMeta(entity);
-    if (meta) {
-      const schema = SPathUtil.schemaEntryGen(entity)[meta.name];
-      if (schema && !isSwaggerRef(schema) && schema.properties) {
-        for (const option of options) {
-          if (option.schema) {
-            if (option.list) {
-              schema.properties[option.key] = {
-                type: 'array',
-                items: option.schema,
-              };
-            } else {
-              schema.properties[option.key] = option.schema;
-            }
-          } else if (option.entity) {
-            const eMeta = getEntityMeta(option.entity);
-            if (eMeta) {
-              const scheme = SPathUtil.schemaEntryGen(option.entity)[
-                eMeta.name
-              ];
-              if (option.list) {
-                schema.properties[option.key] = {
-                  type: 'array',
-                  items: scheme,
-                };
-              } else {
-                schema.properties[option.key] = scheme;
-              }
-            }
-          }
-          if (option.required) {
-            schema.required = [...(schema.required || []), option.key];
-          }
-        }
-      }
-      return {
-        [meta.name]: schema,
-      };
-    }
-    return {};
-  }
-
-  /**
-   * Reduces the entity schema to a single schema element or a generic object.
-   *
-   * @param entity The entity whose schema should be reduced.
-   * @param keys Optional list of keys to include in the reduced schema. If omitted, all keys are considered.
-   * @return Returns the schema element of the sole key if only one key is present; otherwise, returns a generic object schema with type `'object'`. */
-  public static reduceEntitySchemaObject<T extends CoreEntity>(
-    entity: T,
-    ...keys: (keyof T)[]
-  ): SSchemaEl {
-    const schema = this.reduceEntitySchema(entity, ...keys);
-    const ent = Object.entries(schema);
-    if (ent.length === 1) {
-      return ent[0][1];
-    }
-    return {
-      type: 'object',
-    };
-  }
-
-  /**
-   * Creates a reduced version of an entity's schema by excluding specified properties.
-   *
-   * @param {CoreEntity} entity - The entity whose schema is to be processed.
-   * @param {...string} keys - Property names to remove from the schema's `properties` and `required` lists.
-   *
-   * @returns */
-  public static reduceEntitySchema<T extends CoreEntity>(
-    entity: T,
-    ...keys: (keyof T)[]
-  ): SKey<SSchemaEl> {
-    const meta = getEntityMeta(entity);
-    if (meta) {
-      const schema = SPathUtil.schemaEntryGen(entity)[meta.name];
-      if (schema && !isSwaggerRef(schema) && schema.properties) {
-        schema.properties = Object.fromEntries(
-          Object.entries(schema.properties).filter(
-            ([e]) => !keys.includes(e as keyof T),
-          ),
-        );
-        schema.required = (schema.required || []).filter(
-          (e) => !keys.includes(e as keyof T),
-        );
-      }
-      return { [meta.name]: schema };
-    }
-    return {};
+  static editor<J extends CoreEntity>(e: J): ESchemaEditor<J> {
+    return ESchemaEditor.fromEntity(e);
   }
 }

@@ -78,22 +78,20 @@ export interface SwaggerRInfo {
   version: string;
   license?: SwaggerRInfoLicence;
 }
-
-export type SSchemaEl =
-  | {
-      type: SDataType;
-      example?: string;
-      format?: SDataFormat;
-      description?: string;
-      properties?: {
-        [key: string]: SSchemaEl;
-      };
-      items?: SSchemaEl;
-      required?: string[];
-      enum?: string[];
-      nullable?: boolean;
-    }
-  | SwaggerRRef;
+export type SSchemaElObj = {
+  type: SDataType;
+  example?: string;
+  format?: SDataFormat;
+  description?: string;
+  properties?: {
+    [key: string]: SSchemaEl;
+  };
+  items?: SSchemaEl;
+  required?: string[];
+  enum?: string[];
+  nullable?: boolean;
+};
+export type SSchemaEl = SSchemaElObj | SwaggerRRef;
 
 export type SwaggerContent = {
   [K in SMediaType]?: {

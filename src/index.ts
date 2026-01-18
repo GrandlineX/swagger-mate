@@ -2,6 +2,7 @@ import SwaggerUtil from './Swagger/SwaggerUtil.js';
 import SPathUtil from './Swagger/Path/SPathUtil.js';
 import SwaggerClient from './Swagger/Client/SwaggerClient.js';
 
+export * from './Swagger/Path/ESchemaEditor.js';
 export * from './Swagger/debug/index.js';
 export * from './Swagger/annotation/index.js';
 
