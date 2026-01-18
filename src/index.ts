@@ -8,4 +8,5 @@ export * from './Swagger/annotation/index.js';
 export * from './Swagger/Meta/Swagger.js';
 export * from './Swagger/Meta/SwaggerTypes.js';
 export * from './Swagger/Meta/SwaggerTypesStatic.js';
+export * from '@grandlinex/base-con';
 export { SwaggerUtil, SPathUtil, SwaggerClient };
