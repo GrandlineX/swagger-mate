@@ -65,7 +65,7 @@ export interface ConHandle {
 export default class BaseCon {
   private api: string;
 
-  private permanentHeader: undefined | Record<string, string>;
+  private permanentHeader: Record<string, string>;
 
   private authorization: string | null;
 
@@ -81,10 +81,21 @@ export default class BaseCon {
 
   onReconnect: (con: BaseCon) => Promise<boolean>;
 
+  /**
+   * Initializes a new instance of the client.
+   *
+   * @param {Object} conf Configuration object.
+   * @param {ConHandle} conf.con - Connection handle.
+   * @param {string} conf.endpoint - API endpoint URL.
+   * @param {(arg: any) => void} [conf.logger] - Optional logger function; defaults to console.log.
+   * @param {Record<string, string>} [conf.permanentHeader] - Optional permanent headers to include in requests.
+   * @return {void}
+   */
   constructor(conf: {
     con: ConHandle;
     endpoint: string;
     logger?: (arg: any) => void;
+    permanentHeader?: Record<string, string>;
   }) {
     this.api = conf.endpoint;
     this.logger = conf.logger ?? console.log;
@@ -92,6 +103,7 @@ export default class BaseCon {
     this.noAuth = false;
     this.authorization = null;
     this.con = conf.con;
+    this.permanentHeader = conf.permanentHeader || {};
     this.reconnect = async () => {
       this.disconnected = true;
       return false;
@@ -133,12 +145,24 @@ export default class BaseCon {
   }
 
   /**
-   * Returns the current authorization token.
+   * Retrieves the current authorization token.
    *
-   * @return {string} The authorization token or an empty string if none is set.
+   * @return {string|null} The token string used for authorization, or {@code null} if no token is set.
    */
-  token(): string {
-    return this.authorization || '';
+  token(): string | null {
+    return this.authorization;
+  }
+
+  /**
+   * Returns the bearer token string if an authorization value has been set.
+   *
+   * @return {string|null} The bearer token prefixed with "Bearer ", or {@code null} when no authorization is present.
+   */
+  getBearer(): string | null {
+    if (this.authorization) {
+      return `Bearer ${this.authorization}`;
+    }
+    return null;
   }
 
   private p(path: string, config?: ConHandleConfig) {
@@ -180,6 +204,29 @@ export default class BaseCon {
   }
 
   /**
+   * Builds the Authorization header for HTTP requests.
+   *
+   * If the instance has an authorization token, this method returns an object
+   * containing a single `Authorization` header with the Bearer token value.
+   * When no token is available, an empty header object is returned.
+   *
+   * @return {Record<string, string>} The headers object containing the
+   * `Authorization` header when applicable, otherwise an empty object.
+   */
+  private tokenHeader(): Record<string, string> {
+    if (this.authorization) {
+      return {
+        Authorization: this.getBearer()!,
+      };
+    }
+    return {};
+  }
+
+  setPermanentHeader(header: Record<string, string>): void {
+    this.permanentHeader = header;
+  }
+
+  /**
    * Validates the current authentication token by performing a ping and a test request
    * to the backend. The method first ensures connectivity via {@link ping}. If the ping
    * succeeds, it attempts to retrieve a token from the `/test/auth` endpoint using the
@@ -199,9 +246,7 @@ export default class BaseCon {
         const con = await this.con.get<{ token: string }>(
           this.p('/test/auth'),
           {
-            headers: {
-              Authorization: this.token(),
-            },
+            headers: this.tokenHeader(),
           },
         );
         return con.code === 200 || con.code === 201;
@@ -238,19 +283,31 @@ export default class BaseCon {
     this.logger('cant connect to backend');
     this.authorization = null;
     this.disconnected = true;
+    this.noAuth = false;
     return false;
   }
 
   /**
    * Forces a connection using the provided bearer token.
    *
-   * @param {string} token The token to be used for authentication.
+   * @param {string|null} token The token to be used for authentication.
    * @returns {void}
    */
-  forceConnectWithToken(token: string): void {
-    this.authorization = `Bearer ${token}`;
+  forceConnect(token: string | null): void {
+    if (token) {
+      this.authorization = token.replace('Bearer ', '').replace('bearer ', '');
+    } else {
+      this.authorization = null;
+    }
+
     this.disconnected = false;
-    this.noAuth = false;
+    this.noAuth = token === null;
+  }
+
+  coppyFrom(con: BaseCon): void {
+    this.authorization = con.authorization;
+    this.disconnected = con.disconnected;
+    this.noAuth = con.noAuth;
   }
 
   /**
@@ -289,7 +346,7 @@ export default class BaseCon {
         });
         if (token.code === 200 || token.code === 201) {
           if (!dry) {
-            this.authorization = `Bearer ${token.data?.token}`;
+            this.authorization = token.data!.token;
             this.disconnected = false;
             this.noAuth = false;
             this.reconnect = async () => {
@@ -363,7 +420,7 @@ export default class BaseCon {
         dat = await this.con.get<T>(this.p(path, config), {
           ...config,
           headers: {
-            Authorization: this.token(),
+            ...this.tokenHeader(),
             ...formHeader,
             ...config?.headers,
             ...this.permanentHeader,
@@ -374,7 +431,7 @@ export default class BaseCon {
         dat = await this.con.post<T, J>(this.p(path, config), body, {
           ...config,
           headers: {
-            Authorization: this.token(),
+            ...this.tokenHeader(),
             ...formHeader,
             ...config?.headers,
             ...this.permanentHeader,
@@ -385,7 +442,7 @@ export default class BaseCon {
         dat = await this.con.patch<T, J>(this.p(path, config), body, {
           ...config,
           headers: {
-            Authorization: this.token(),
+            ...this.tokenHeader(),
             ...formHeader,
             ...config?.headers,
             ...this.permanentHeader,
@@ -396,7 +453,7 @@ export default class BaseCon {
         dat = await this.con.delete<T>(this.p(path, config), {
           ...config,
           headers: {
-            Authorization: this.token(),
+            ...this.tokenHeader(),
             ...formHeader,
             ...config?.headers,
             ...this.permanentHeader,
