@@ -1,6 +1,6 @@
 {
   "name": "@grandlinex/swagger-mate",
-  "version": "1.3.4",
+  "version": "1.3.5",
   "type": "module",
   "exports": {
     ".": {
@@ -19,18 +19,17 @@
   "module": "dist/mjs/index.js",
   "description": "GrandLineX Swagger-Mate Project",
   "scripts": {
-    "pre-build": "node ./preBuild.js",
-    "buildprep": "npm run pre-build && npm run build-mjs && npm run build-cjs && npm run build-fix",
+    "buildprep": "npm run build-mjs && npm run build-cjs && npm run build-fix",
     "build-mjs": "tsc",
     "build-cjs": "tsc -p tsconfig-cjs.json",
     "build-fix": "node ./node_modules/@grandlinex/core/fix.js",
     "pack": "npm run buildprep && npm pack",
     "start": "node dist/cjs/run.js",
-    "start-dev": "npm run pre-build && cross-env dev=true  ts-node src/run.ts",
-    "run-dev": "npm run pre-build && cross-env dev=true node --no-warnings=ExperimentalWarning --loader ts-node/esm  src/tests/run.ts",
+    "start-dev": "cross-env dev=true  ts-node src/run.ts",
+    "run-dev": "cross-env dev=true node --no-warnings=ExperimentalWarning --loader ts-node/esm  src/tests/run.ts",
     "lint": "eslint src",
-    "test": "npm run pre-build && cross-env dev=true jest --runInBand ",
-    "test-coverage": "npm run pre-build && cross-env dev=true jest --runInBand --ci --collectCoverage   --coverageDirectory=\"./coverage\"  --reporters=default --reporters=jest-junit",
+    "test": "cross-env dev=true jest --runInBand ",
+    "test-coverage": "cross-env dev=true jest --runInBand --ci --collectCoverage   --coverageDirectory=\"./coverage\"  --reporters=default --reporters=jest-junit",
     "makeDocs": "typedoc"
   },
   "bin": {
@@ -47,6 +46,7 @@
     "form-data": ">=4.0.5"
   },
   "devDependencies": {
+    "@grandlinex/base-con": "1.0.0",
     "axios": "1.13.2",
     "node-fetch": "3.3.2",
     "cross-env": "10.0.0",

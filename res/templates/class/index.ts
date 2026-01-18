@@ -4,12 +4,11 @@
  */
 import FormData from 'form-data';
 import ApiCon from './ApiCon.js';
-import BaseCon from './BaseCon.js';
 import CApiCon from './CApiCon.js';
 import IApiCon from './IApiCon.js';
 
-
-export * from './BaseCon.js';
+export * from '@grandlinex/base-con';
 export * from './ApiTypes.js';
 
 export default ApiCon;
+export {FormData, ApiCon, CApiCon, IApiCon};
