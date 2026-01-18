@@ -206,7 +206,7 @@ function createPackage(name?: string, version?: string, module?: boolean) {
       typescript: '5.9.2',
     },
     peerDependencies: {
-      '@grandlinex/base-con': '1.0.0',
+      '@grandlinex/base-con': '1.0.1',
       axios: '>=1.13.2',
       'form-data': '>=4.0.5',
     },
