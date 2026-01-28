@@ -50,7 +50,7 @@ describe('Client Gen', () => {
     expect(meta).not.toBeUndefined();
 
     if (meta) {
-      SwaggerClient.genAPICConnector({conf: meta,  module:true});
+      SwaggerClient.genAPICConnector({conf: meta});
     }
   });
 });

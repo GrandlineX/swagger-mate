@@ -167,6 +167,7 @@ function interfaceHandler(conf: SwaggerConfig): string {
 function buildCon(conf: SwaggerConfig) {
   const template = PathHelp(getBaseFolder(), '..', 'res', 'templates');
 
+  const fix = fs.readFileSync(Path.join(template, 'fix.js'), 'utf-8');
   const funcTemo = fs.readFileSync(
     Path.join(template, 'class', 'ApiCon.ts'),
     'utf-8',
@@ -191,55 +192,85 @@ function buildCon(conf: SwaggerConfig) {
   fs.writeFileSync(Path.join(baseGen, 'ApiCon.ts'), con);
   fs.writeFileSync(Path.join(baseGen, 'IApiCon.ts'), iCon);
   fs.writeFileSync(Path.join(baseGen, 'CApiCon.ts'), cCon);
+  fs.writeFileSync(Path.join(baseGen, '..', 'fix.js'), fix);
 }
 
-function createPackage(name?: string, version?: string, module?: boolean) {
+function createPackage(name?: string, version?: string) {
   const conf: Record<string, any> = {
     name: name || '@swagger/con',
     version: version || '0.0.1',
-    main: 'dist/index.js',
-    types: 'dist/index.d.ts',
-    module: module ? 'dist/index.js' : undefined,
-    type: module ? 'module' : undefined,
+    type: 'module',
+    exports: {
+      '.': {
+        import: {
+          types: './dist/mjs/index.d.ts',
+          default: './dist/mjs/index.js',
+        },
+        require: {
+          types: './dist/cjs/index.d.ts',
+          default: './dist/cjs/index.js',
+        },
+      },
+    },
+    types: 'dist/cjs/index.d.ts',
+    main: 'dist/cjs/index.js',
+    module: 'dist/mjs/index.js',
     devDependencies: {
       '@types/node': '22.15.32',
       typescript: '5.9.2',
     },
     peerDependencies: {
-      '@grandlinex/base-con': '1.0.2',
+      '@grandlinex/base-con': '1.0.3',
       axios: '>=1.13.2',
       'form-data': '>=4.0.5',
     },
     scripts: {
-      build: 'tsc',
-      buildPack: 'tsc && npm pack',
+      build: 'npm run build-mjs && npm run build-cjs && npm run build-fix',
+      'build-mjs': 'tsc',
+      'build-cjs': 'tsc -p tsconfig-cjs.json',
+      'build-fix': 'node ./fix.js',
+      buildPack: 'npm run build && npm pack',
     },
   };
   fs.writeFileSync(
     Path.join(baseR, 'package.json'),
     JSON.stringify(conf, null, 2),
   );
-  const tsConf = {
-    compilerOptions: {
-      jsx: 'react',
-      baseUrl: './src',
-      declaration: true,
-      target: 'ES2020',
-      module: module ? 'NodeNext' : 'commonjs',
-      outDir: './dist',
-      strict: true,
-      esModuleInterop: true,
-      experimentalDecorators: true,
-      emitDecoratorMetadata: true,
-      moduleResolution: module ? 'NodeNext' : undefined,
-      skipLibCheck: true,
-      forceConsistentCasingInFileNames: true,
-    },
-    exclude: ['node_modules', 'dist'],
-  };
+  function tsConf(module: boolean) {
+    return {
+      compilerOptions: {
+        jsx: 'react',
+        baseUrl: './src',
+        declaration: true,
+        target: 'ES2020',
+        module: module ? 'NodeNext' : 'commonjs',
+        outDir: module ? './dist/mjs' : './dist/cjs',
+        strict: true,
+        ...(module ? { moduleResolution: 'NodeNext' } : {}),
+        esModuleInterop: true,
+        experimentalDecorators: true,
+        emitDecoratorMetadata: true,
+        skipLibCheck: true,
+        forceConsistentCasingInFileNames: true,
+        types: ['reflect-metadata', 'node'],
+      },
+      exclude: ['node_modules', 'dist'],
+      ...(module
+        ? {
+            'ts-node': {
+              esm: true,
+            },
+          }
+        : {}),
+    };
+  }
   fs.writeFileSync(
     Path.join(baseR, 'tsconfig.json'),
-    JSON.stringify(tsConf, null, 2),
+    JSON.stringify(tsConf(true), null, 2),
+  );
+  fs.writeFileSync(
+    Path.join(baseR, 'tsconfig-cjs.json'),
+    JSON.stringify(tsConf(false), null, 2),
   );
   const ignore = ['src', 'node_modules', '*.tgz'];
   fs.writeFileSync(Path.join(baseR, '.npmignore'), ignore.join('\n'));
@@ -251,14 +282,13 @@ export default class SwaggerClient {
     name?: string;
     version?: string;
     writeMeta?: boolean;
-    module?: boolean;
   }) {
-    const { name, version, writeMeta, module, conf } = options;
+    const { name, version, writeMeta, conf } = options;
     const template = PathHelp(getBaseFolder(), '..', 'res', 'templates');
     XUtil.createFolderBulk(baseR, baseGen);
     cp(Path.join(template, 'class'), 'index.ts');
     buildCon(conf);
-    createPackage(name, version, module);
+    createPackage(name, version);
     if (writeMeta || writeMeta === undefined) {
       SwaggerUtil.writeMeta(conf, 'JSON', baseR);
     }
