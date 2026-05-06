@@ -1,6 +1,6 @@
 {
   "name": "@grandlinex/swagger-mate",
-  "version": "2.0.0-alpha.2",
+  "version": "2.0.0-alpha.3",
   "type": "module",
   "exports": {
     ".": {
@@ -37,7 +37,7 @@
     "swagger-mate-esm": "./dist/mjs/cli.js"
   },
   "dependencies": {
-    "@grandlinex/core": "2.0.0-alpha.2",
+    "@grandlinex/core": "2.0.0-alpha.3",
     "@grandlinex/base-con": "1.0.3",
     "js-yaml": "4.1.1",
     "reflect-metadata": "0.2.2"
