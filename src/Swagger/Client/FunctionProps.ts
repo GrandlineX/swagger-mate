@@ -9,6 +9,9 @@ function functionProps(
 ): FunctionTemplateProps {
   const comments: string[] = [];
 
+  if (cur.deprecated) {
+    comments.push('@deprecated');
+  }
   if (cur.description) {
     comments.push(cur.description);
   }

@@ -5,6 +5,7 @@ export type IfMappingKeyType = {
   type: string;
   required?: boolean;
   nullable?: boolean;
+  deprecated?: boolean;
 };
 export type IfMappingType = {
   name: string;
@@ -129,6 +130,7 @@ export function transformInterface(
 
             if (!isSwaggerRef(prop)) {
               const nullable = prop.nullable ?? false;
+              const deprecated = prop.deprecated ?? false;
               switch (prop.type) {
                 case 'number':
                 case 'integer':
@@ -137,6 +139,7 @@ export function transformInterface(
                     type: 'number',
                     required: isRequired,
                     nullable,
+                    deprecated,
                   });
                   break;
                 case 'string':
@@ -147,6 +150,7 @@ export function transformInterface(
                       : 'string',
                     required: isRequired,
                     nullable,
+                    deprecated,
                   });
                   break;
                 case 'boolean':
@@ -155,6 +159,7 @@ export function transformInterface(
                     type: 'boolean',
                     required: isRequired,
                     nullable,
+                    deprecated,
                   });
                   break;
                 case 'object':
@@ -164,12 +169,14 @@ export function transformInterface(
                       type: 'any',
                       required: isRequired,
                       nullable,
+                      deprecated,
                     });
                   } else {
                     cur.keys.push({
                       key,
                       type: ifName(cur.name, key),
                       required: isRequired,
+                      deprecated,
                     });
                     out.push(...transformInterface(cur.name, key, prop));
                   }
@@ -181,6 +188,7 @@ export function transformInterface(
                       type: 'unknown[]',
                       required: isRequired,
                       nullable,
+                      deprecated,
                     });
                   } else if (isSwaggerRef(prop.items)) {
                     cur.keys.push({
@@ -188,6 +196,7 @@ export function transformInterface(
                       type: `${typeByRef(prop.items.$ref)}[]`,
                       required: isRequired,
                       nullable,
+                      deprecated,
                     });
                   } else {
                     cur.keys.push({
@@ -195,6 +204,7 @@ export function transformInterface(
                       type: `${ifName(cur.name, `${key}Element`)}[]`,
                       required: isRequired,
                       nullable,
+                      deprecated,
                     });
                     out.push(
                       ...transformInterface(

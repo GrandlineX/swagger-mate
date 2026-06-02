@@ -50,6 +50,7 @@ export interface SwaggerRPathConf {
   operationId?: string;
   requestBody?: SwaggerRPathReqBody;
   parameters?: SwaggerRPathParameter[];
+  deprecated?: boolean;
 }
 
 export interface SwaggerRPathTypes {
@@ -89,6 +90,7 @@ export type SSchemaElObj = {
   required?: string[];
   enum?: string[];
   nullable?: boolean;
+  deprecated?: boolean;
 };
 export type SSchemaEl = SSchemaElObj | SwaggerRRef;
 

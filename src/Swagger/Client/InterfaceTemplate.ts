@@ -11,7 +11,7 @@ function interfaceTemplate(
     }
 
     return `export interface ${IF_NAME} {
-${types.map(({key, type, required, nullable}) => `${S(2)}${sK(key)}${rq(required)} ${rN(type,nullable)};`).join('\n')}
+${types.map(({key, type, required, nullable, deprecated}) => `${deprecated ? `${S(2)}/** @deprecated */\n` : ''}${S(2)}${sK(key)}${rq(required)} ${rN(type, nullable)};`).join('\n')}
 }`;
 }
 

@@ -1,9 +1,20 @@
 /* eslint-disable @typescript-eslint/ban-types */
 
 export type SMediaType =
-  | 'text/plain; charset=utf-8'
   | 'application/json'
-  | 'multipart/form-data';
+  | 'application/octet-stream'
+  | 'application/pdf'
+  | 'application/xml'
+  | 'application/x-www-form-urlencoded'
+  | 'multipart/form-data'
+  | 'text/csv'
+  | 'text/html'
+  | 'text/plain'
+  | 'text/plain; charset=utf-8'
+  | 'image/png'
+  | 'image/jpeg'
+  | 'image/gif'
+  | 'image/webp';
 
 export type SDataFormat = 'binary' | 'base64' | 'uuid';
 export type SDataType =
