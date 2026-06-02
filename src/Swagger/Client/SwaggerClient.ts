@@ -31,7 +31,7 @@ function cp(path: string, file: string) {
   if (fs.existsSync(dest)) {
     fs.copyFileSync(dest, target);
   } else {
-    console.error(`cant copy file ${file}`);
+    throw new Error(`Template file not found: ${dest}`);
   }
 }
 
@@ -154,7 +154,7 @@ function interfaceHandler(conf: SwaggerConfig): string {
       if (cur) {
         interfaceList.push(
           ...transformInterface(resp, '', cur).map((del) =>
-            interfaceTemplate(del.name, del.keys),
+            interfaceTemplate(del.name, del.keys, del.rawType),
           ),
         );
       }
@@ -220,8 +220,8 @@ function createPackage(name?: string, version?: string) {
       typescript: '5.9.2',
     },
     peerDependencies: {
-      '@grandlinex/base-con': '1.0.3',
-      axios: '>=1.13.2',
+      '@grandlinex/base-con': '2.0.0',
+      axios: '>=1.16.1',
       'form-data': '>=4.0.5',
     },
     scripts: {

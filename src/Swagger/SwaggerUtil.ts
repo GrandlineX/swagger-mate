@@ -89,13 +89,14 @@ export default class SwaggerUtil {
       res.status(200).send(conf);
     });
 
-    return new Promise<Server | null>((resolve) => {
+    return new Promise<Server | null>((resolve, reject) => {
       const s = app.listen(port, () => {
         this.getLogger().log(
           `${type} listen on http://localhost:${port}${key}#`,
         );
         resolve(s);
       });
+      s.on('error', reject);
     });
   }
 
@@ -228,10 +229,10 @@ export default class SwaggerUtil {
         break;
       case 'USE':
         path[convertedPath] = {
-          get: conf,
-          patch: conf,
-          post: conf,
-          delete: conf,
+          get: { ...conf },
+          patch: { ...conf },
+          post: { ...conf },
+          delete: { ...conf },
         };
         break;
       default:
@@ -240,13 +241,11 @@ export default class SwaggerUtil {
   }
 
   static merge(root: SwaggerConfig, data: MergeInputType[]): SwaggerConfig {
-    const out: any = root;
-    if (!out.paths) {
-      out.paths = {};
-    }
-    if (!out.components) {
-      out.components = {};
-    }
+    const out: SwaggerConfig = {
+      ...root,
+      paths: { ...(root.paths || {}) },
+      components: { ...(root.components || {}) },
+    };
     data.forEach(({ path, comp }) => {
       if (path && out.paths) {
         const keys = Object.keys(path.path);
@@ -259,11 +258,9 @@ export default class SwaggerUtil {
               if (!out.paths[nKey]) {
                 out.paths[nKey] = {};
               }
-              if (out.paths[nKey]) {
-                for (const c of comps) {
-                  const nC = c as keyof SwaggerRPathTypes;
-                  out.paths[nKey][nC] = ac[nC];
-                }
+              for (const c of comps) {
+                const nC = c as keyof SwaggerRPathTypes;
+                out.paths[nKey][nC] = ac[nC];
               }
             }
           }
@@ -280,10 +277,8 @@ export default class SwaggerUtil {
               if (!out.components[nKey]) {
                 out.components[nKey] = {};
               }
-              if (out.components[nKey]) {
-                for (const c of comps) {
-                  out.components[nKey][c] = ac[c];
-                }
+              for (const c of comps) {
+                out.components[nKey][c] = ac[c];
               }
             }
           }
@@ -312,6 +307,8 @@ export default class SwaggerUtil {
         for (const key of keys) {
           if (!map.has(key)) {
             map.set(key, obj[key]);
+          } else {
+            console.warn(`mergeConfig: duplicate key "${key}" skipped`);
           }
         }
       }

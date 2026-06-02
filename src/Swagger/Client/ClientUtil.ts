@@ -142,7 +142,9 @@ export function transformInterface(
                 case 'string':
                   cur.keys.push({
                     key,
-                    type: 'string',
+                    type: prop.enum
+                      ? prop.enum.map((v) => `'${v}'`).join(' | ')
+                      : 'string',
                     required: isRequired,
                     nullable,
                   });
@@ -173,7 +175,14 @@ export function transformInterface(
                   }
                   break;
                 case 'array':
-                  if (isSwaggerRef(prop.items)) {
+                  if (!prop.items) {
+                    cur.keys.push({
+                      key,
+                      type: 'unknown[]',
+                      required: isRequired,
+                      nullable,
+                    });
+                  } else if (isSwaggerRef(prop.items)) {
                     cur.keys.push({
                       key,
                       type: `${typeByRef(prop.items.$ref)}[]`,
@@ -187,7 +196,13 @@ export function transformInterface(
                       required: isRequired,
                       nullable,
                     });
-                    out.push(...transformInterface(cur.name, key, prop));
+                    out.push(
+                      ...transformInterface(
+                        cur.name,
+                        `${key}Element`,
+                        prop.items,
+                      ),
+                    );
                   }
                   break;
                 default:
@@ -232,7 +247,9 @@ export function transformInterface(
         out.push({
           keys: [],
           name: cur.name,
-          rawType: `string`,
+          rawType: schema.enum
+            ? schema.enum.map((v) => `'${v}'`).join(' | ')
+            : 'string',
         });
         break;
       case 'integer':

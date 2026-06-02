@@ -57,7 +57,6 @@ export interface SwaggerRPathTypes {
   post?: SwaggerRPathConf;
   patch?: SwaggerRPathConf;
   delete?: SwaggerRPathConf;
-  update?: SwaggerRPathConf;
 }
 
 export interface SwaggerRInfoLicence {

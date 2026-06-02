@@ -93,6 +93,9 @@ export class ESchemaEditor<T extends CoreEntity> {
         } else {
           this.data.properties[option.key] = option.schema;
         }
+        if (option.required) {
+          this.data.required = [...(this.data.required || []), option.key];
+        }
       } else if (option.entity) {
         const scheme = ESchemaEditor.fromEntity(option.entity).getSchema();
         if (option.nullable) {
@@ -106,9 +109,9 @@ export class ESchemaEditor<T extends CoreEntity> {
         } else {
           this.data.properties[option.key] = scheme;
         }
-      }
-      if (option.required) {
-        this.data.required = [...(this.data.required || []), option.key];
+        if (option.required) {
+          this.data.required = [...(this.data.required || []), option.key];
+        }
       }
     }
     return this;
